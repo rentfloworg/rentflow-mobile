@@ -106,6 +106,7 @@ EOF
 feature() { jq -r ".features.$1 // false" "$PROFILE_PATH"; }
 jq -n \
   --arg client "$CLIENT" --arg appName "$APP_NAME" --arg api "$API_BASE_URL" \
+  --arg version "$VERSION_NAME" \
   --arg oauthBase "$OAUTH_BASE_URL" --arg oauthClient "$OAUTH_CLIENT_ID" \
   --arg oauthRedirect "$OAUTH_REDIRECT_URI" --arg orgId "$ORG_ID" \
   --arg primary "$PRIMARY" --arg accent "$ACCENT" --arg bg "$BACKGROUND" \
@@ -116,7 +117,7 @@ jq -n \
   --argjson termination "$(feature termination)" --argjson kyc "$(feature kyc)" \
   --argjson push "$(feature push)" \
   '{
-    CLIENT_SLUG: $client, APP_NAME: $appName, API_BASE_URL: $api,
+    CLIENT_SLUG: $client, APP_NAME: $appName, APP_VERSION: $version, API_BASE_URL: $api,
     OAUTH_BASE_URL: $oauthBase, OAUTH_CLIENT_ID: $oauthClient,
     OAUTH_REDIRECT_URI: $oauthRedirect, ORG_ID: $orgId,
     BRAND_PRIMARY: $primary, BRAND_ACCENT: $accent, BRAND_BACKGROUND: $bg,
@@ -182,14 +183,18 @@ if [ "$BUILD_APK" = 0 ]; then
 fi
 
 # ── Build ──────────────────────────────────────────────────────────────────
+# FLUTTER_BUILD_ARGS: optional extra flags (e.g. --target-platform android-arm64
+# on disk-constrained hosts).
 if [ "$BUILD_APK" = 1 ]; then
   log "building debug APK"
-  flutter build apk --debug --dart-define-from-file="build/$CLIENT.defines.json"
+  # shellcheck disable=SC2086
+  flutter build apk --debug --dart-define-from-file="build/$CLIENT.defines.json" ${FLUTTER_BUILD_ARGS:-}
   ARTIFACT="dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE-debug.apk"
   cp build/app/outputs/flutter-apk/app-debug.apk "$ARTIFACT"
 else
   log "building release AAB"
-  flutter build appbundle --release --dart-define-from-file="build/$CLIENT.defines.json"
+  # shellcheck disable=SC2086
+  flutter build appbundle --release --dart-define-from-file="build/$CLIENT.defines.json" ${FLUTTER_BUILD_ARGS:-}
   ARTIFACT="dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.aab"
   cp build/app/outputs/bundle/release/app-release.aab "$ARTIFACT"
   log "verifying signature"
