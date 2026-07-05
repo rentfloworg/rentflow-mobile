@@ -88,6 +88,17 @@ TERMS_URL=$(jqp '.legal.termsUrl')
 PRIVACY_URL=$(jqp '.legal.privacyUrl')
 OAUTH_SCHEME=${OAUTH_REDIRECT_URI%%://*}
 [ -n "$OAUTH_SCHEME" ] || OAUTH_SCHEME=ru.rentflow.tenant
+
+# Logo may be an https URL (owner-uploaded via the admin UI) — download it;
+# a repo-relative path or empty value falls back to the bundled default.
+case "$LOGO" in
+  https://*|http://*)
+    LOGO_FILE="build/$CLIENT-logo.png"
+    curl -fsSL "$LOGO" -o "$LOGO_FILE" || fail "failed to download logo: $LOGO"
+    LOGO="$LOGO_FILE"
+    ;;
+  "") LOGO="assets/branding/logo.png" ;;
+esac
 [ -f "$LOGO" ] || fail "logo not found: $LOGO"
 
 # Per-client RuStore credentials from the materialized profile (owner-managed
