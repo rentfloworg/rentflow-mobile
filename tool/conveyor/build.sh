@@ -207,9 +207,17 @@ else
   cp build/app/outputs/bundle/release/app-release.aab "$ARTIFACT"
   log "verifying signature"
   jarsigner -verify "$ARTIFACT" | tail -1
+  # Installable test build alongside the store bundle (same signing config).
+  log "building release APK for testing"
+  # shellcheck disable=SC2086
+  flutter build apk --release --dart-define-from-file="build/$CLIENT.defines.json" ${FLUTTER_BUILD_ARGS:-}
+  cp build/app/outputs/flutter-apk/app-release.apk "dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.apk"
+  log "test apk: dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.apk"
 fi
 log "artifact: $ARTIFACT"
-ARTIFACT_URL="${ARTIFACT_URL_BASE:-}${ARTIFACT_URL_BASE:+/}$ARTIFACT"
+# CI presets ARTIFACT_URL to the Actions run page (where artifacts are
+# downloadable); locally it is composed from ARTIFACT_URL_BASE if set.
+ARTIFACT_URL="${ARTIFACT_URL:-${ARTIFACT_URL_BASE:-}${ARTIFACT_URL_BASE:+/}$ARTIFACT}"
 
 # ── Publish ────────────────────────────────────────────────────────────────
 if [ "$PUBLISH" = 1 ] && [ "$BUILD_APK" = 0 ]; then

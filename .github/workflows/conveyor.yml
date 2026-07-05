@@ -48,6 +48,9 @@ jobs:
           CLIENT_SLUG: ${{ inputs.client_slug }}
           JOB_ID: ${{ inputs.job_id }}
           PUBLISH: ${{ inputs.publish }}
+          # Job artifact link shown in the admin UI — points at this run's
+          # artifacts (signed AAB + installable test APK).
+          ARTIFACT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           BUILDER_API_URL: ${{ secrets.BUILDER_API_URL }}
           BUILDER_CI_TOKEN: ${{ secrets.BUILDER_CI_TOKEN }}
           ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
@@ -78,9 +81,11 @@ jobs:
           fi
           bash tool/conveyor/build.sh "$@"
 
-      - name: Upload AAB artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.client_slug }}-aab
-          path: dist/*.aab
+          name: ${{ inputs.client_slug }}-build
+          path: |
+            dist/*.aab
+            dist/*.apk
           retention-days: 30
