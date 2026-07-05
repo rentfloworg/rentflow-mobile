@@ -11,7 +11,9 @@ plugins {
 // build-profile; without it the template defaults below are used (local dev).
 val clientProps = Properties().apply {
     val file = rootProject.file("client.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
+    // Reader, not InputStream: appName may contain non-Latin characters and
+    // Properties.load(InputStream) decodes ISO-8859-1.
+    if (file.exists()) file.reader(Charsets.UTF_8).use { load(it) }
 }
 
 fun clientProp(key: String): String? = clientProps.getProperty(key)?.takeIf { it.isNotBlank() }
@@ -20,7 +22,7 @@ fun clientProp(key: String): String? = clientProps.getProperty(key)?.takeIf { it
 // Without either, release signs with the debug key so local builds keep working.
 val keystoreProps = Properties().apply {
     val file = rootProject.file("keystore.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
+    if (file.exists()) file.reader(Charsets.UTF_8).use { load(it) }
 }
 
 fun signingValue(propKey: String, envKey: String): String? =
