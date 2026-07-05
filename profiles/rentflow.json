@@ -14,7 +14,7 @@
   },
   "backend": {
     "apiBaseUrl": "https://api.rentflow.tech",
-    "oauthBaseUrl": "https://id.rentflow.tech",
+    "oauthBaseUrl": "https://auth.rentflow.tech",
     "oauthClientId": "rentflow-mobile",
     "oauthRedirectUri": "ru.rentflow.tenant://oauth/callback",
     "orgId": ""
