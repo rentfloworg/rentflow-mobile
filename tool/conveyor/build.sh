@@ -90,6 +90,14 @@ OAUTH_SCHEME=${OAUTH_REDIRECT_URI%%://*}
 [ -n "$OAUTH_SCHEME" ] || OAUTH_SCHEME=ru.rentflow.tenant
 [ -f "$LOGO" ] || fail "logo not found: $LOGO"
 
+# Per-client RuStore credentials from the materialized profile (owner-managed
+# in builder-service). Env vars win so repo-wide CI secrets stay a fallback.
+if [ -z "${RUSTORE_KEY_ID:-}" ]; then
+  RUSTORE_KEY_ID=$(jqp '.rustore.keyId')
+  RUSTORE_PRIVATE_KEY=$(jq -r '.rustore.privateKey // empty' "$PROFILE_PATH")
+  export RUSTORE_KEY_ID RUSTORE_PRIVATE_KEY
+fi
+
 log "client=$CLIENT applicationId=$APPLICATION_ID version=$VERSION_NAME+$VERSION_CODE"
 report BUILDING
 
