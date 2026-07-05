@@ -1,0 +1,6889 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      description: Returns a simple API welcome message.
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Welcome endpoint
+      tags:
+        - App
+  /health:
+    get:
+      description: Checks if the Gateway is running.
+      operationId: AppController_health
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+      summary: Health check
+      tags:
+        - App
+  /metrics:
+    get:
+      operationId: PrometheusController_index
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Prometheus
+  /auth/otp/send:
+    post:
+      description: Sends a verification code to the user phone number or email.
+      operationId: AuthController_sendOtp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendOtpRequest'
+      responses:
+        '200':
+          description: ''
+      summary: Send otp code
+      tags:
+        - Auth
+  /auth/otp/verify:
+    post:
+      description: >-
+        Verifies the code sent to the user phone number or email and returns a
+        access token.
+      operationId: AuthController_verifyOtp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpRequest'
+      responses:
+        '200':
+          description: ''
+      summary: Verify otp code
+      tags:
+        - Auth
+  /auth/refresh:
+    post:
+      description: Renews access token using refresh token from cookies
+      operationId: AuthController_refresh
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Refresh access token
+      tags:
+        - Auth
+  /auth/logout:
+    post:
+      description: Clears the refresh token cookie and logs the user out
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Logout
+      tags:
+        - Auth
+  /auth/telegram:
+    get:
+      operationId: AuthController_telegramInit
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
+  /auth/telegram/verify:
+    post:
+      operationId: AuthController_telegramVerify
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramVerifyRequest'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
+  /auth/dev-login:
+    post:
+      description: >-
+        Issues a token pair for a seeded account without OTP. Available only
+        when NODE_ENV=development. Body identifier accepts account id, email, or
+        phone; defaults to dev-superuser.
+      operationId: AuthController_devLogin
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Dev-only login (no OTP)
+      tags:
+        - Auth
+  /auth/telegram/finalize:
+    post:
+      operationId: AuthController_finalizeTelegramLogin
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramFinalizeRequest'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
+  /account/type:
+    patch:
+      description: Sets the account type to INDIVIDUAL, ENTREPRENEUR or COMPANY.
+      operationId: AccountController_updateAccountType
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountTypeRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update account type
+      tags:
+        - Account
+  /account/telegram:
+    put:
+      description: Links or unlinks (telegramId=null) the Telegram account.
+      operationId: AccountController_updateTelegram
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTelegramRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update telegram link
+      tags:
+        - Account
+  /account/email/init:
+    post:
+      description: Sends confirmation code to a new email address.
+      operationId: AccountController_initEmailChange
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitEmailChangeRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Init email change
+      tags:
+        - Account
+  /account/email/confirm:
+    post:
+      description: Verifies confirmation code and updates user email address.
+      operationId: AccountController_confirmEmailChange
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmailChangeRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Confirm email change
+      tags:
+        - Account
+  /account/phone/init:
+    post:
+      description: Sends confirmation code to a new phone number.
+      operationId: AccountController_initPhoneChange
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitPhoneChangeRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Init phone change
+      tags:
+        - Account
+  /account/phone/confirm:
+    post:
+      description: Verifies confirmation code and updates user phone number.
+      operationId: AccountController_confirmPhoneChange
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmPhoneChangeRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Confirm phone change
+      tags:
+        - Account
+  /account/company:
+    get:
+      description: Returns CompanyProfile of the current account.
+      operationId: AccountController_getCompanyProfile
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get company profile
+      tags:
+        - Account
+    put:
+      description: Creates or updates CompanyProfile for ENTREPRENEUR / COMPANY accounts.
+      operationId: AccountController_upsertCompanyProfile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertCompanyProfileRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Upsert company profile
+      tags:
+        - Account
+  /account/sub-accounts:
+    get:
+      description: Returns sub-accounts (agents/managers) of the current account.
+      operationId: AccountController_listSubAccounts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List sub-accounts
+      tags:
+        - Account
+    post:
+      operationId: AccountController_inviteSubAccount
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteSubAccountRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Invite sub-account
+      tags:
+        - Account
+  /account/sub-accounts/{id}:
+    patch:
+      operationId: AccountController_updateSubAccount
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubAccountRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update sub-account (role/status)
+      tags:
+        - Account
+    delete:
+      operationId: AccountController_deleteSubAccount
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete sub-account
+      tags:
+        - Account
+  /account/documents:
+    get:
+      operationId: AccountController_listCompanyDocuments
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List company documents
+      tags:
+        - Account
+    post:
+      operationId: AccountController_uploadCompanyDocument
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadCompanyDocumentRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Upload (register) company document metadata
+      tags:
+        - Account
+  /account/documents/{id}:
+    delete:
+      operationId: AccountController_deleteCompanyDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete company document
+      tags:
+        - Account
+  /account/{id}:
+    get:
+      description: Returns the Account aggregate by id.
+      operationId: AccountController_getAccount
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      summary: Get account by id
+      tags:
+        - Account
+  /oauth/authorize:
+    get:
+      description: >-
+        Validates client_id and redirect_uri, checks for existing session.
+        Called by OAuth App on /authorize page load.
+      operationId: OAuthController_authorize
+      parameters:
+        - name: client_id
+          required: true
+          in: query
+          schema:
+            example: rentflow-web
+            type: string
+        - name: redirect_uri
+          required: true
+          in: query
+          schema:
+            example: https://app.rentflow.tech/callback
+            type: string
+        - name: response_type
+          required: true
+          in: query
+          schema:
+            example: code
+            type: string
+            enum:
+              - code
+        - name: state
+          required: true
+          in: query
+          schema:
+            example: random-state-string
+            type: string
+        - name: code_challenge
+          required: true
+          in: query
+          schema:
+            example: E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+            type: string
+        - name: code_challenge_method
+          required: true
+          in: query
+          schema:
+            example: S256
+            type: string
+            enum:
+              - S256
+        - name: scope
+          required: false
+          in: query
+          schema:
+            example: profile account
+            type: string
+      responses:
+        '200':
+          description: ''
+      summary: Validate OAuth client
+      tags:
+        - OAuth
+    post:
+      description: >-
+        Creates an authorization code after successful login/consent. Returns
+        code + state for redirect.
+      operationId: OAuthController_createAuthorization
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorizationRequest'
+      responses:
+        '200':
+          description: ''
+      summary: Create authorization code
+      tags:
+        - OAuth
+  /oauth/token:
+    post:
+      description: >-
+        Exchanges an authorization code + PKCE code_verifier for access and
+        refresh tokens.
+      operationId: OAuthController_exchangeToken
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangeTokenRequest'
+      responses:
+        '200':
+          description: ''
+      summary: Exchange authorization code for tokens
+      tags:
+        - OAuth
+  /oauth/session:
+    post:
+      description: >-
+        Creates a session after successful login on the OAuth app. Sets httpOnly
+        cookie.
+      operationId: OAuthController_createSession
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '200':
+          description: ''
+      summary: Create OAuth session
+      tags:
+        - OAuth
+  /users/@me:
+    get:
+      description: Returns authenticated user profile data.
+      operationId: UsersController_getMe
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMeResponse'
+      security:
+        - bearer: []
+      summary: Get current user profile
+      tags:
+        - Users
+    patch:
+      operationId: UsersController_patchUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUserRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      tags:
+        - Users
+  /properties:
+    get:
+      operationId: PropertyController_listProperties
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - AVAILABLE
+              - RENTED
+              - ARCHIVED
+        - name: city
+          required: false
+          in: query
+          schema:
+            example: Moscow
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - APARTMENT
+              - HOUSE
+              - ROOM
+              - OFFICE
+              - LAND
+        - name: rooms
+          required: false
+          in: query
+          schema:
+            example: 3
+            type: number
+        - name: areaMin
+          required: false
+          in: query
+          schema:
+            example: '30'
+            type: string
+        - name: areaMax
+          required: false
+          in: query
+          schema:
+            example: '150'
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: lenina
+            type: string
+        - name: sortBy
+          required: false
+          in: query
+          schema:
+            default: createdAt
+            type: string
+            enum:
+              - createdAt
+              - area
+              - rooms
+        - name: sortOrder
+          required: false
+          in: query
+          schema:
+            default: desc
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPropertiesResponse'
+      security:
+        - bearer: []
+      summary: List properties
+      tags:
+        - Properties
+    post:
+      description: >-
+        Creates property + optional rentTerms, images, utilities,
+        additionalServices in a single call.
+      operationId: PropertyController_createProperty
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePropertyRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+      security:
+        - bearer: []
+      summary: Create property (atomic with sub-resources)
+      tags:
+        - Properties
+  /properties/{id}:
+    get:
+      operationId: PropertyController_getProperty
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+      security:
+        - bearer: []
+      summary: Get property by ID
+      tags:
+        - Properties
+    patch:
+      operationId: PropertyController_updateProperty
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePropertyRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+      security:
+        - bearer: []
+      summary: Update property
+      tags:
+        - Properties
+    delete:
+      operationId: PropertyController_deleteProperty
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete property
+      tags:
+        - Properties
+  /properties/{id}/status:
+    patch:
+      operationId: PropertyController_updatePropertyStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePropertyStatusRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+      security:
+        - bearer: []
+      summary: Update property status
+      tags:
+        - Properties
+  /properties/upload-url:
+    post:
+      description: >-
+        Returns a short-lived presigned PUT URL for direct upload from the
+        browser. After successful PUT, include `publicUrl` in
+        CreateProperty.images[].url.
+      operationId: PropertyController_generateUploadUrl
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateUploadUrlBodyDto'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Generate presigned upload URL for property image
+      tags:
+        - Properties
+  /properties/{id}/rent-terms:
+    put:
+      operationId: PropertyController_upsertRentTerms
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertRentTermsRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+      security:
+        - bearer: []
+      summary: Upsert rent terms
+      tags:
+        - Properties
+  /properties/{id}/images:
+    post:
+      operationId: PropertyController_addImage
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddImageRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Add image to property
+      tags:
+        - Properties
+  /properties/{id}/images/{imageId}:
+    delete:
+      operationId: PropertyController_removeImage
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: imageId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Remove image from property
+      tags:
+        - Properties
+  /properties/{id}/images/reorder:
+    post:
+      operationId: PropertyController_reorderImages
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReorderImagesRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Reorder property images
+      tags:
+        - Properties
+  /properties/{id}/utilities:
+    put:
+      operationId: PropertyController_upsertUtility
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertUtilityRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Upsert utility
+      tags:
+        - Properties
+  /properties/{id}/utilities/{utilityId}:
+    delete:
+      operationId: PropertyController_deleteUtility
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: utilityId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete utility
+      tags:
+        - Properties
+  /properties/{id}/services:
+    post:
+      operationId: PropertyController_createAdditionalService
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdditionalServiceRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create additional service
+      tags:
+        - Properties
+  /properties/{id}/services/{serviceId}:
+    patch:
+      operationId: PropertyController_updateAdditionalService
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: serviceId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAdditionalServiceRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update additional service
+      tags:
+        - Properties
+    delete:
+      operationId: PropertyController_deleteAdditionalService
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: serviceId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete additional service
+      tags:
+        - Properties
+  /crm/contacts:
+    get:
+      operationId: ContactsController_listContacts
+      parameters:
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - TENANT
+              - LANDLORD
+        - name: search
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+      responses:
+        '200':
+          description: Paginated list of contacts
+      security:
+        - bearer: []
+      summary: List contacts
+      tags:
+        - crm
+    post:
+      operationId: ContactsController_createContact
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create contact
+      tags:
+        - crm
+  /crm/contacts/{id}:
+    get:
+      operationId: ContactsController_getContact
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get contact by id
+      tags:
+        - crm
+    patch:
+      operationId: ContactsController_updateContact
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update contact
+      tags:
+        - crm
+    delete:
+      operationId: ContactsController_deleteContact
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete contact
+      tags:
+        - crm
+  /crm/contacts/{id}/status:
+    patch:
+      operationId: ContactsController_updateContactStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactStatusRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update contact reliability status
+      tags:
+        - crm
+  /crm/contacts/{contactId}/notes:
+    get:
+      operationId: ContactNotesController_listContactNotes
+      parameters:
+        - name: contactId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List contact notes
+      tags:
+        - crm
+    post:
+      operationId: ContactNotesController_createContactNote
+      parameters:
+        - name: contactId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactNoteRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create contact note
+      tags:
+        - crm
+  /crm/contacts/{contactId}/notes/{noteId}:
+    delete:
+      operationId: ContactNotesController_deleteContactNote
+      parameters:
+        - name: contactId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: noteId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete contact note
+      tags:
+        - crm
+  /crm/contacts/{contactId}/kyc:
+    get:
+      operationId: ContactKycController_getContactKyc
+      parameters:
+        - name: contactId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get contact KYC
+      tags:
+        - crm
+    put:
+      operationId: ContactKycController_upsertContactKyc
+      parameters:
+        - name: contactId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertContactKycRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Upsert contact KYC
+      tags:
+        - crm
+  /crm/deals:
+    get:
+      operationId: DealsController_listDeals
+      parameters:
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - COMPLETED
+              - CLOSED
+              - CANCELLED
+        - name: stage
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - NEW
+              - CONTACT
+              - NEGOTIATION
+              - VIEWING
+              - CONTRACT
+              - ACTIVE
+              - CLOSED
+              - CANCELLED
+        - name: contactId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+      responses:
+        '200':
+          description: Paginated list of deals
+      security:
+        - bearer: []
+      summary: List deals
+      tags:
+        - crm
+    post:
+      operationId: DealsController_createDeal
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDealRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create deal
+      tags:
+        - crm
+  /crm/deals/{id}:
+    get:
+      operationId: DealsController_getDeal
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get deal by id
+      tags:
+        - crm
+    patch:
+      operationId: DealsController_updateDeal
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDealRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update deal
+      tags:
+        - crm
+    delete:
+      operationId: DealsController_deleteDeal
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete deal
+      tags:
+        - crm
+  /crm/deals/{id}/stage:
+    patch:
+      operationId: DealsController_updateDealStage
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDealStageRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update deal stage
+      tags:
+        - crm
+  /crm/deals/{id}/status:
+    patch:
+      operationId: DealsController_updateDealStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDealStatusRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update deal status
+      tags:
+        - crm
+  /crm/deals/{dealId}/messages:
+    get:
+      operationId: DealMessagesController_listDealMessages
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: channel
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - AVITO
+              - CIAN
+              - TELEGRAM
+              - WHATSAPP
+              - EMAIL
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+      responses:
+        '200':
+          description: Paginated list of messages for the deal
+      security:
+        - bearer: []
+      summary: List deal messages
+      tags:
+        - crm
+    post:
+      operationId: DealMessagesController_createDealMessage
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDealMessageRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Send outbound deal message
+      tags:
+        - crm
+  /crm/messages/{messageId}/read:
+    patch:
+      operationId: DealMessagesController_markDealMessageRead
+      parameters:
+        - name: messageId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkDealMessageReadRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Mark deal message as read
+      tags:
+        - crm
+  /crm/deals/{dealId}/meetings:
+    get:
+      operationId: DealMeetingsController_listDealMeetings
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - SCHEDULED
+              - CONFIRMED
+              - COMPLETED
+              - CANCELLED
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List deal meetings
+      tags:
+        - crm
+    post:
+      operationId: DealMeetingsController_createDealMeeting
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDealMeetingRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create deal meeting
+      tags:
+        - crm
+  /crm/meetings/{id}:
+    patch:
+      operationId: DealMeetingsController_updateDealMeeting
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDealMeetingRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update deal meeting
+      tags:
+        - crm
+    delete:
+      operationId: DealMeetingsController_deleteDealMeeting
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete deal meeting
+      tags:
+        - crm
+  /crm/deals/{dealId}/notes:
+    get:
+      operationId: DealNotesController_listDealNotes
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List deal notes
+      tags:
+        - crm
+    post:
+      operationId: DealNotesController_createDealNote
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDealNoteRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create deal note
+      tags:
+        - crm
+  /crm/deals/{dealId}/notes/{noteId}:
+    delete:
+      operationId: DealNotesController_deleteDealNote
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: noteId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete deal note
+      tags:
+        - crm
+  /crm/deals/{dealId}/tasks:
+    get:
+      operationId: DealTasksController_listDealTasks
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: isDone
+          required: false
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List deal tasks
+      tags:
+        - crm
+    post:
+      operationId: DealTasksController_createDealTask
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDealTaskRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create deal task
+      tags:
+        - crm
+  /crm/deals/{dealId}/tasks/{taskId}:
+    patch:
+      operationId: DealTasksController_updateDealTask
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: taskId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDealTaskRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update deal task
+      tags:
+        - crm
+    delete:
+      operationId: DealTasksController_deleteDealTask
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: taskId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete deal task
+      tags:
+        - crm
+  /crm/deals/{dealId}/history:
+    get:
+      operationId: DealHistoryController_listDealHistory
+      parameters:
+        - name: dealId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List deal history
+      tags:
+        - crm
+  /tasks:
+    get:
+      operationId: TasksController_listTasks
+      parameters:
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - all
+              - open
+              - done
+        - name: kind
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - CALL
+              - MEETING
+              - EMAIL
+              - OTHER
+        - name: bindingKind
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DEAL
+              - RENTAL
+              - PROPERTY
+              - CONTACT
+        - name: bindingId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: responsibleId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: priority
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LOW
+              - MEDIUM
+              - HIGH
+        - name: dueFrom
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: dueTo
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: sort
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List tasks
+      tags:
+        - Tasks
+    post:
+      operationId: TasksController_createTask
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create task
+      tags:
+        - Tasks
+  /tasks/responsibles:
+    get:
+      operationId: TasksController_listTaskResponsibles
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List task responsibles
+      tags:
+        - Tasks
+  /tasks/{id}:
+    get:
+      operationId: TasksController_getTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get task
+      tags:
+        - Tasks
+    patch:
+      operationId: TasksController_updateTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update task
+      tags:
+        - Tasks
+    delete:
+      operationId: TasksController_deleteTask
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete task
+      tags:
+        - Tasks
+  /dashboard/client-flow/metrics:
+    get:
+      operationId: DashboardController_getClientFlowMetrics
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientFlowMetricsResponse'
+      security:
+        - bearer: []
+      summary: Client-flow metrics
+      tags:
+        - Dashboard
+  /dashboard/events:
+    get:
+      description: >-
+        Events for the calendar in [from, to], aggregated across services. A
+        failing source is skipped, not fatal.
+      operationId: DashboardController_listDashboardEvents
+      parameters:
+        - name: from
+          required: true
+          in: query
+          description: ISO-8601 start of the range (inclusive)
+          schema:
+            type: string
+        - name: to
+          required: true
+          in: query
+          description: ISO-8601 end of the range (inclusive)
+          schema:
+            type: string
+        - name: kind
+          required: false
+          in: query
+          description: Optional single event kind to fetch, e.g. MEETING
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDashboardEventsResponse'
+      security:
+        - bearer: []
+      summary: Dashboard calendar events
+      tags:
+        - Dashboard
+  /dashboard/tasks:
+    get:
+      description: Unified tasks for the current account, shaped for the dashboard widget.
+      operationId: DashboardController_listDashboardTasks
+      parameters:
+        - name: dueDate
+          required: false
+          in: query
+          description: YYYY-MM-DD
+          schema:
+            type: string
+        - name: overdue
+          required: false
+          in: query
+          schema:
+            type: boolean
+        - name: isDone
+          required: false
+          in: query
+          schema:
+            type: boolean
+        - name: entityId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Dashboard tasks
+      tags:
+        - Dashboard
+  /rent:
+    get:
+      operationId: RentalController_listRentals
+      parameters:
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - UPCOMING
+              - CLOSING
+              - COMPLETED
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: tenantContactId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: paymentStatus
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - PAID
+              - OVERDUE
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: Lenina
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRentalsResponse'
+      security:
+        - bearer: []
+      summary: List rentals
+      tags:
+        - Rentals
+    post:
+      operationId: RentalController_createRental
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRentalRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalResponse'
+      security:
+        - bearer: []
+      summary: Create rental
+      tags:
+        - Rentals
+  /rent/{id}:
+    get:
+      operationId: RentalController_getRental
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalResponse'
+      security:
+        - bearer: []
+      summary: Get rental by ID
+      tags:
+        - Rentals
+    patch:
+      operationId: RentalController_updateRental
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRentalRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalResponse'
+      security:
+        - bearer: []
+      summary: Update rental
+      tags:
+        - Rentals
+    delete:
+      operationId: RentalController_deleteRental
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete rental
+      tags:
+        - Rentals
+  /rent/{id}/status:
+    patch:
+      operationId: RentalController_updateRentalStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRentalStatusRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalResponse'
+      security:
+        - bearer: []
+      summary: Update rental status
+      tags:
+        - Rentals
+  /rent/{rentalId}/automation:
+    get:
+      operationId: RentalController_getAutomation
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get rental automation
+      tags:
+        - Rentals
+    put:
+      operationId: RentalController_upsertAutomation
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAutomationRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Upsert rental automation
+      tags:
+        - Rentals
+  /rent/{rentalId}/notes:
+    get:
+      operationId: RentalController_listNotes
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List rental notes
+      tags:
+        - Rentals
+    post:
+      operationId: RentalController_createNote
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create rental note
+      tags:
+        - Rentals
+  /rent/{rentalId}/notes/{noteId}:
+    delete:
+      operationId: RentalController_deleteNote
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: noteId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete rental note
+      tags:
+        - Rentals
+  /rent/{rentalId}/tasks:
+    get:
+      operationId: RentalController_listTasks
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: isDone
+          required: false
+          in: query
+          schema:
+            example: false
+            type: boolean
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List rental tasks
+      tags:
+        - Rentals
+    post:
+      operationId: RentalController_createTask
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create rental task
+      tags:
+        - Rentals
+  /rent/{rentalId}/tasks/{taskId}:
+    patch:
+      operationId: RentalController_updateTask
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: taskId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Update rental task
+      tags:
+        - Rentals
+    delete:
+      operationId: RentalController_deleteTask
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: taskId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete rental task
+      tags:
+        - Rentals
+  /rent/{rentalId}/history:
+    get:
+      operationId: RentalController_listHistory
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List rental history
+      tags:
+        - Rentals
+  /finances/metrics:
+    get:
+      operationId: FinanceController_getMetrics
+      parameters:
+        - name: from
+          required: false
+          in: query
+          schema:
+            example: '2026-01-01T00:00:00.000Z'
+            type: string
+        - name: to
+          required: false
+          in: query
+          schema:
+            example: '2026-12-31T23:59:59.999Z'
+            type: string
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: tenantId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinanceMetricsResponse'
+      security:
+        - bearer: []
+      summary: Get finance metrics
+      tags:
+        - Finances
+  /finances/series:
+    get:
+      operationId: FinanceController_getFinanceSeries
+      parameters:
+        - name: from
+          required: true
+          in: query
+          schema:
+            example: '2026-01-01T00:00:00.000Z'
+            type: string
+        - name: to
+          required: true
+          in: query
+          schema:
+            example: '2026-12-31T23:59:59.999Z'
+            type: string
+        - name: groupBy
+          required: true
+          in: query
+          schema:
+            example: month
+            type: string
+            enum:
+              - day
+              - month
+        - name: currency
+          required: false
+          in: query
+          schema:
+            example: RUB
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Get finance series (time-bucketed)
+      tags:
+        - Finances
+  /finances/invoices:
+    get:
+      operationId: FinanceController_listInvoices
+      parameters:
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - RENT
+              - DEPOSIT
+              - UTILITIES
+              - PENALTY
+              - ADDITIONAL
+              - ONE_TIME
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - PAID
+              - OVERDUE
+              - CANCELLED
+              - ADJUSTED
+              - PARTIAL
+        - name: tenantId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: rent
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInvoicesResponse'
+      security:
+        - bearer: []
+      summary: List invoices
+      tags:
+        - Finances
+    post:
+      operationId: FinanceController_createInvoice
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+      security:
+        - bearer: []
+      summary: Create invoice
+      tags:
+        - Finances
+  /finances/transactions:
+    get:
+      operationId: FinanceController_listTransactions
+      parameters:
+        - name: invoiceId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: tenantId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: rent
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTransactionsResponse'
+      security:
+        - bearer: []
+      summary: List transactions
+      tags:
+        - Finances
+    post:
+      operationId: FinanceController_createTransaction
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create transaction (record payment)
+      tags:
+        - Finances
+  /invoices/{id}:
+    get:
+      operationId: InvoicesController_getInvoice
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+      security:
+        - bearer: []
+      summary: Get invoice by ID
+      tags:
+        - Invoices
+    patch:
+      operationId: InvoicesController_updateInvoice
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+      security:
+        - bearer: []
+      summary: Update invoice
+      tags:
+        - Invoices
+    delete:
+      operationId: InvoicesController_deleteInvoice
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete invoice
+      tags:
+        - Invoices
+  /rent/{rentalId}/invoices:
+    get:
+      operationId: RentInvoicesController_listRentalInvoices
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - RENT
+              - DEPOSIT
+              - UTILITIES
+              - PENALTY
+              - ADDITIONAL
+              - ONE_TIME
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - PAID
+              - OVERDUE
+              - CANCELLED
+              - ADJUSTED
+              - PARTIAL
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInvoicesResponse'
+      security:
+        - bearer: []
+      summary: List invoices for a rental
+      tags:
+        - Rental Invoices
+  /documents/templates:
+    get:
+      operationId: DocumentTemplatesController_listTemplates
+      parameters:
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: lease
+            type: string
+        - name: includeArchived
+          required: false
+          in: query
+          schema:
+            example: false
+            type: boolean
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplatesResponse'
+      security:
+        - bearer: []
+      summary: List document templates
+      tags:
+        - Document Templates
+    post:
+      operationId: DocumentTemplatesController_createTemplate
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentTemplateResponse'
+      security:
+        - bearer: []
+      summary: Create document template
+      tags:
+        - Document Templates
+  /documents/templates/authors:
+    get:
+      operationId: DocumentTemplatesController_listAuthors
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplateAuthorsResponse'
+      security:
+        - bearer: []
+      summary: List distinct template authors
+      tags:
+        - Document Templates
+  /documents/templates/{id}:
+    get:
+      operationId: DocumentTemplatesController_getTemplate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentTemplateResponse'
+      security:
+        - bearer: []
+      summary: Get document template by ID
+      tags:
+        - Document Templates
+    put:
+      operationId: DocumentTemplatesController_updateTemplate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTemplateRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentTemplateResponse'
+      security:
+        - bearer: []
+      summary: Update document template
+      tags:
+        - Document Templates
+    delete:
+      operationId: DocumentTemplatesController_deleteTemplate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete document template
+      tags:
+        - Document Templates
+  /documents/templates/{id}/versions:
+    get:
+      operationId: DocumentTemplatesController_listVersions
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplateVersionsResponse'
+      security:
+        - bearer: []
+      summary: List template versions
+      tags:
+        - Document Templates
+  /documents/templates/{id}/history:
+    get:
+      operationId: DocumentTemplatesController_listHistory
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplateHistoryResponse'
+      security:
+        - bearer: []
+      summary: List template history (audit-style trail)
+      tags:
+        - Document Templates
+  /documents:
+    get:
+      operationId: DocumentsController_listDocuments
+      parameters:
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LEASE_CONTRACT
+              - ACT_TRANSFER
+              - ACT_RETURN
+              - APPENDIX
+              - REGISTRATION_APPLICATION
+              - OTHER
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - DATA_FILLED
+              - SIGNED_BY_ME
+              - SENT
+              - SIGNED_BY_TENANT
+              - SIGNED_BY_BOTH
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: search
+          required: false
+          in: query
+          schema:
+            example: lease
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDocumentsResponse'
+      security:
+        - bearer: []
+      summary: List documents (registry)
+      tags:
+        - Documents
+    post:
+      operationId: DocumentsController_createDocument
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocumentRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+        - bearer: []
+      summary: Create document
+      tags:
+        - Documents
+  /documents/upload-url:
+    post:
+      operationId: DocumentsController_generateUploadUrl
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateDocumentUploadUrlRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateDocumentUploadUrlResponse'
+      security:
+        - bearer: []
+      summary: Generate presigned S3 PUT URL for a document upload
+      tags:
+        - Documents
+  /documents/{id}:
+    get:
+      operationId: DocumentsController_getDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+        - bearer: []
+      summary: Get document by ID
+      tags:
+        - Documents
+    patch:
+      operationId: DocumentsController_updateDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocumentRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+        - bearer: []
+      summary: Update document
+      tags:
+        - Documents
+    delete:
+      operationId: DocumentsController_deleteDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete document
+      tags:
+        - Documents
+  /documents/{id}/render:
+    post:
+      operationId: DocumentsController_renderDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+        - bearer: []
+      summary: Render document PDF from template + filled data
+      tags:
+        - Documents
+  /documents/{id}/status:
+    patch:
+      operationId: DocumentsController_updateStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocumentStatusRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+      security:
+        - bearer: []
+      summary: Update document status
+      tags:
+        - Documents
+  /documents/{id}/signatures:
+    get:
+      operationId: DocumentsController_listSignatures
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSignaturesResponse'
+      security:
+        - bearer: []
+      summary: List document signatures
+      tags:
+        - Documents
+    post:
+      operationId: DocumentsController_createSignature
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSignatureRequest'
+      responses:
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Create document signature
+      tags:
+        - Documents
+  /rent/{rentalId}/documents:
+    get:
+      operationId: RentalDocumentsController_listRentalDocuments
+      parameters:
+        - name: rentalId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LEASE_CONTRACT
+              - ACT_TRANSFER
+              - ACT_RETURN
+              - APPENDIX
+              - REGISTRATION_APPLICATION
+              - OTHER
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - DATA_FILLED
+              - SIGNED_BY_ME
+              - SENT
+              - SIGNED_BY_TENANT
+              - SIGNED_BY_BOTH
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDocumentsResponse'
+      security:
+        - bearer: []
+      summary: List documents for a rental
+      tags:
+        - Documents (Rental scope)
+  /properties/{id}/documents:
+    get:
+      operationId: PropertyDocumentsController_listPropertyDocuments
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LEASE_CONTRACT
+              - ACT_TRANSFER
+              - ACT_RETURN
+              - APPENDIX
+              - REGISTRATION_APPLICATION
+              - OTHER
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - DATA_FILLED
+              - SIGNED_BY_ME
+              - SENT
+              - SIGNED_BY_TENANT
+              - SIGNED_BY_BOTH
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDocumentsResponse'
+      security:
+        - bearer: []
+      summary: List documents for a property
+      tags:
+        - Documents (Property scope)
+  /crm/deals/{id}/documents:
+    get:
+      operationId: CrmDocumentsController_listDealDocuments
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LEASE_CONTRACT
+              - ACT_TRANSFER
+              - ACT_RETURN
+              - APPENDIX
+              - REGISTRATION_APPLICATION
+              - OTHER
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - DATA_FILLED
+              - SIGNED_BY_ME
+              - SENT
+              - SIGNED_BY_TENANT
+              - SIGNED_BY_BOTH
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDocumentsResponse'
+      security:
+        - bearer: []
+      summary: List documents for a CRM deal
+      tags:
+        - Documents (CRM scope)
+  /crm/contacts/{id}/documents:
+    get:
+      operationId: CrmDocumentsController_listContactDocuments
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - LEASE_CONTRACT
+              - ACT_TRANSFER
+              - ACT_RETURN
+              - APPENDIX
+              - REGISTRATION_APPLICATION
+              - OTHER
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - DATA_FILLED
+              - SIGNED_BY_ME
+              - SENT
+              - SIGNED_BY_TENANT
+              - SIGNED_BY_BOTH
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDocumentsResponse'
+      security:
+        - bearer: []
+      summary: List documents for a CRM contact
+      tags:
+        - Documents (CRM scope)
+  /integration/connections:
+    get:
+      description: Returns all platform connections for the current account.
+      operationId: IntegrationController_listConnections
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConnectionResponse'
+      security:
+        - bearer: []
+      summary: List all platform connections
+      tags:
+        - Integration
+  /integration/connections/{platform}:
+    get:
+      description: Returns connection metadata for the given platform.
+      operationId: IntegrationController_getConnection
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionResponse'
+      security:
+        - bearer: []
+      summary: Get platform connection
+      tags:
+        - Integration
+  /integration/connect:
+    post:
+      description: Stores encrypted credentials for an integration platform.
+      operationId: IntegrationController_connectPlatform
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectPlatformRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionResponse'
+      security:
+        - bearer: []
+      summary: Connect platform
+      tags:
+        - Integration
+  /integration/disconnect/{platform}:
+    delete:
+      description: Removes credentials for the given platform.
+      operationId: IntegrationController_disconnectPlatform
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Disconnect platform
+      tags:
+        - Integration
+  /integration/listings:
+    get:
+      description: Returns external listings filtered by property/platform/status.
+      operationId: IntegrationController_listListings
+      parameters:
+        - name: propertyId
+          required: false
+          in: query
+          schema:
+            example: X6KBMTnCDkbrPN_I0YXG8
+            type: string
+        - name: platform
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - AVITO
+              - CIAN
+              - SITE
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - UNPUBLISHED
+              - MODERATION
+              - PUBLISHED
+              - PAUSED
+              - ERROR
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExternalListingResponse'
+      security:
+        - bearer: []
+      summary: List external listings
+      tags:
+        - Integration
+  /integration/publish:
+    post:
+      description: Creates external listing and pushes it to the platform.
+      operationId: IntegrationController_publishListing
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishListingRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalListingResponse'
+      security:
+        - bearer: []
+      summary: Publish listing to platform
+      tags:
+        - Integration
+  /integration/unpublish:
+    delete:
+      description: Removes external listing on the given platform.
+      operationId: IntegrationController_unpublishListing
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishListingRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Unpublish listing from platform
+      tags:
+        - Integration
+  /integration/listings/{listingId}/sync:
+    post:
+      description: Refreshes counters and statuses for the given external listing.
+      operationId: IntegrationController_syncListing
+      parameters:
+        - name: listingId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalListingResponse'
+      security:
+        - bearer: []
+      summary: Sync listing
+      tags:
+        - Integration
+  /integration/feed-url/{platform}:
+    get:
+      description: Returns a public feed URL for the platform aggregator.
+      operationId: IntegrationController_getFeedUrl
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    type: string
+      security:
+        - bearer: []
+      summary: Get feed URL for platform
+      tags:
+        - Integration
+  /integration/imports:
+    post:
+      description: Parses the given source URL and creates a draft PublicationImport.
+      operationId: IntegrationController_startImport
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartImportRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationImportResponseDto'
+      security:
+        - bearer: []
+      summary: Start publication import
+      tags:
+        - Integration
+  /integration/imports/{id}:
+    get:
+      description: Returns publication import by id.
+      operationId: IntegrationController_getImport
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationImportResponseDto'
+      security:
+        - bearer: []
+      summary: Get publication import
+      tags:
+        - Integration
+  /integration/imports/{id}/complete:
+    post:
+      description: Persists the parsed payload as a Property.
+      operationId: IntegrationController_completeImport
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteImportRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationImportResponseDto'
+      security:
+        - bearer: []
+      summary: Complete publication import
+      tags:
+        - Integration
+  /integration/avito/oauth/url:
+    get:
+      description: >-
+        Returns authorization URL and opaque state. Frontend should redirect to
+        authorizationUrl.
+      operationId: IntegrationController_getAvitoOauthUrl
+      parameters:
+        - name: scopes
+          required: false
+          in: query
+          description: Override default OAuth scopes (comma-separated)
+          schema:
+            example: items:info,user:read
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Start Avito OAuth
+      tags:
+        - Integration
+  /integration/avito/oauth/callback:
+    post:
+      description: >-
+        Exchanges code+state for an access/refresh token pair and persists the
+        PlatformConnection.
+      operationId: IntegrationController_completeAvitoOauth
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteAvitoOauthRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionResponse'
+      security:
+        - bearer: []
+      summary: Complete Avito OAuth
+      tags:
+        - Integration
+  /integration/avito/connections/{connectionId}/items:
+    get:
+      description: >-
+        Returns items from the connected Avito cabinet via the stored access
+        token.
+      operationId: IntegrationController_listAvitoItems
+      parameters:
+        - name: connectionId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - PUBLISHED
+              - PAUSED
+              - MODERATION
+              - REJECTED
+              - EXPIRED
+              - REMOVED
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 25
+            example: 25
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List Avito cabinet items
+      tags:
+        - Integration
+  /integration/avito/connections/{connectionId}/items/import:
+    post:
+      description: >-
+        Creates a Property + ExternalListing(PUBLISHED) row for each selected
+        Avito item.
+      operationId: IntegrationController_importAvitoItems
+      parameters:
+        - name: connectionId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportAvitoItemsRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Import Avito items as Properties
+      tags:
+        - Integration
+  /notifications:
+    get:
+      operationId: NotificationsController_list
+      parameters:
+        - name: unread
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: limit
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: List notifications for current account
+      tags:
+        - notifications
+  /notifications/unread-count:
+    get:
+      operationId: NotificationsController_unreadCount
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Count unread notifications
+      tags:
+        - notifications
+  /notifications/{id}/read:
+    patch:
+      operationId: NotificationsController_markRead
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Mark single notification as read
+      tags:
+        - notifications
+  /notifications/mark-all-read:
+    post:
+      operationId: NotificationsController_markAllRead
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Mark all notifications as read
+      tags:
+        - notifications
+  /studio/leads:
+    options:
+      operationId: StudioController_preflightLeads
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - Studio
+    post:
+      description: >-
+        Public endpoint called by the contact form on {slug}.rentflow.tech.
+        Creates a Contact + Deal in CRM bound to propertyId and notifies the
+        owner.
+      operationId: StudioController_createLead
+      parameters:
+        - name: x-forwarded-for
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStudioLeadRequest'
+      responses:
+        '201':
+          description: ''
+      summary: Submit a lead from a published studio visit card
+      tags:
+        - Studio
+info:
+  title: RentFlow API
+  description: API Gateway for RentFlow microservices
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          example: '2025-11-26T10:30:00.000Z'
+      required:
+        - status
+        - timestamp
+    SendOtpRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: '+79111234567'
+        type:
+          type: string
+          example: phone
+          enum:
+            - phone
+            - email
+      required:
+        - identifier
+        - type
+    VerifyOtpRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: '+79111234567'
+        code:
+          type: string
+          example: '123456'
+        type:
+          type: string
+          example: phone
+          enum:
+            - phone
+            - email
+      required:
+        - identifier
+        - code
+        - type
+    TelegramVerifyRequest:
+      type: object
+      properties:
+        tgAuthResult:
+          type: string
+          example: eyJpZCI6NjE1NTg0Njk5MywiZmlyc3RfbmFtZSI6Ilx1MDQxMlx1MDQzMFx1MDQ...
+      required:
+        - tgAuthResult
+    TelegramFinalizeRequest:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          example: 21a0885dee191ae17d1842db2aa426ee
+      required:
+        - sessionId
+    UpdateAccountTypeRequest:
+      type: object
+      properties:
+        accountType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - ENTREPRENEUR
+            - COMPANY
+          example: INDIVIDUAL
+      required:
+        - accountType
+    UpdateTelegramRequest:
+      type: object
+      properties:
+        telegramId:
+          type: object
+          example: '123456789'
+          nullable: true
+          description: Telegram user id to link, or null to unlink.
+    InitEmailChangeRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: vito.cornleone@rentflowdev.ru
+      required:
+        - email
+    ConfirmEmailChangeRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: vito.cornleone@rentflowdev.ru
+        code:
+          type: string
+          example: '123456'
+      required:
+        - email
+        - code
+    InitPhoneChangeRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          example: '+79111234567'
+      required:
+        - phone
+    ConfirmPhoneChangeRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          example: '+79111234567'
+        code:
+          type: string
+          example: '123456'
+      required:
+        - phone
+        - code
+    UpsertCompanyProfileRequest:
+      type: object
+      properties:
+        inn:
+          type: string
+          example: '7707083893'
+        ogrn:
+          type: string
+          example: '1027700132195'
+        kpp:
+          type: string
+          example: '770701001'
+        name:
+          type: string
+          example: OOO RentFlow
+        address:
+          type: string
+          example: Moscow, ul. Lenina, 1
+        bik:
+          type: string
+          example: '044525225'
+        bank:
+          type: string
+          example: PAO Sberbank
+        bankAccount:
+          type: string
+          example: '40702810000000000001'
+        corrAccount:
+          type: string
+          example: '30101810400000000225'
+        signatory:
+          type: string
+          example: Ivanov I.I.
+        registrationAddr:
+          type: string
+          example: Moscow, ul. Tverskaya, 5, kv. 12
+        passportSeries:
+          type: string
+          example: '4509'
+        passportNumber:
+          type: string
+          example: '123456'
+        passportIssuedBy:
+          type: string
+          example: OUFMS Moscow district
+        passportIssueDate:
+          type: string
+          example: '2015-06-12'
+        passportDepartmentCode:
+          type: string
+          example: 770-001
+        signatoryBasis:
+          type: string
+          enum:
+            - PERSONAL
+            - POWER_OF_ATTORNEY
+            - CHARTER
+            - OTHER
+    InviteSubAccountRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: Иван Менеджеров
+        phone:
+          type: string
+          example: '+79991234567'
+        email:
+          type: string
+          example: manager@example.com
+        role:
+          type: string
+          enum:
+            - MANAGER
+            - ACCOUNTANT
+            - ADMIN
+          example: MANAGER
+        propertyIds:
+          type: array
+          items:
+            type: string
+      required:
+        - fullName
+        - role
+    UpdateSubAccountRequest:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - MANAGER
+            - ACCOUNTANT
+            - ADMIN
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INVITED
+            - BLOCKED
+    UploadCompanyDocumentRequest:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+            - REGISTRATION_CERTIFICATE
+            - EGRUL_EXCERPT
+            - CHARTER
+            - OTHER
+        fileUrl:
+          type: string
+          example: https://s3.example.com/docs/abc.pdf
+        fileName:
+          type: string
+          example: Свидетельство.pdf
+        fileSize:
+          type: number
+          example: 102400
+        mimeType:
+          type: string
+          example: application/pdf
+      required:
+        - kind
+        - fileUrl
+        - fileName
+    CreateAuthorizationRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          example: account-id-123
+        clientId:
+          type: string
+          example: rentflow-web
+        redirectUri:
+          type: string
+          example: https://app.rentflow.tech/callback
+        codeChallenge:
+          type: string
+          example: E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+        codeChallengeMethod:
+          type: string
+          example: S256
+          enum:
+            - S256
+        state:
+          type: string
+          example: random-state-string
+        scope:
+          type: string
+          example: profile account
+      required:
+        - accountId
+        - clientId
+        - redirectUri
+        - codeChallenge
+        - codeChallengeMethod
+        - state
+    ExchangeTokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          example: authorization_code
+          enum:
+            - authorization_code
+        code:
+          type: string
+          example: authorization-code-here
+        code_verifier:
+          type: string
+          example: pkce-code-verifier-string
+        client_id:
+          type: string
+          example: rentflow-web
+        redirect_uri:
+          type: string
+          example: https://app.rentflow.tech/callback
+      required:
+        - grant_type
+        - code
+        - code_verifier
+        - client_id
+        - redirect_uri
+    CreateSessionRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          example: account-id-123
+      required:
+        - accountId
+    GetMeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        name:
+          type: string
+          example: Anton Chigurh
+        email:
+          type: string
+          example: anton.chigurh@rentflowdev.ru
+        phone:
+          type: string
+          example: '+77777777777'
+        avatar:
+          type: string
+          example: https://cdn.rentflowdev.ru/users/e0db4163fc2aab147599c750906396d3
+      required:
+        - id
+        - email
+        - phone
+    PatchUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Anton Chigurh
+      required:
+        - name
+    PropertyManagerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+      required:
+        - id
+        - name
+    PropertyRentTermsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        propertyId:
+          type: string
+        rentAmount:
+          type: string
+          example: '50000.00'
+        rentCurrency:
+          type: string
+          example: RUB
+        rentPeriod:
+          type: string
+          example: MONTHLY
+        vatPercent:
+          type: string
+        depositAmount:
+          type: string
+        depositCurrency:
+          type: string
+        penaltyRate:
+          type: string
+        penaltyGraceDays:
+          type: number
+      required:
+        - id
+        - propertyId
+        - rentAmount
+        - rentCurrency
+        - rentPeriod
+        - depositCurrency
+    PropertyImageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        propertyId:
+          type: string
+        url:
+          type: string
+        order:
+          type: number
+          example: 0
+      required:
+        - id
+        - propertyId
+        - url
+        - order
+    PropertyUtilityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        propertyId:
+          type: string
+        type:
+          type: string
+        calculation:
+          type: string
+        paidBy:
+          type: string
+        hasSeparateMeter:
+          type: boolean
+        meterNumber:
+          type: string
+        ratePerSqm:
+          type: string
+        fixedAmount:
+          type: string
+        coefficient:
+          type: string
+        propertyArea:
+          type: string
+        buildingArea:
+          type: string
+        currency:
+          type: string
+      required:
+        - id
+        - propertyId
+        - type
+        - calculation
+        - paidBy
+        - hasSeparateMeter
+        - currency
+    PropertyAdditionalServiceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        propertyId:
+          type: string
+        name:
+          type: string
+        pricePerUnit:
+          type: string
+          example: '1500.00'
+        currency:
+          type: string
+        quantity:
+          type: string
+          example: '1'
+        unit:
+          type: string
+        includeVat:
+          type: boolean
+      required:
+        - id
+        - propertyId
+        - name
+        - pricePerUnit
+        - currency
+        - quantity
+        - includeVat
+    PropertyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        ownerId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        managerId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        status:
+          type: string
+          example: AVAILABLE
+        type:
+          type: string
+          example: APARTMENT
+        description:
+          type: string
+        address:
+          type: string
+          example: ul. Lenina, 42
+        city:
+          type: string
+          example: Moscow
+        cadastralNumber:
+          type: string
+          example: '47:14:0101001:123'
+        area:
+          type: string
+          example: '65.5'
+        livingArea:
+          type: string
+        rooms:
+          type: number
+          example: 3
+        floor:
+          type: number
+          example: 5
+        totalFloors:
+          type: number
+        yearBuilt:
+          type: number
+        buildingType:
+          type: string
+        renovation:
+          type: string
+        bathroom:
+          type: string
+        bathroomCount:
+          type: number
+        balcony:
+          type: boolean
+          example: false
+        loggia:
+          type: boolean
+          example: false
+        wardrobe:
+          type: boolean
+          example: false
+        passengerElevator:
+          type: number
+          example: 1
+        freightElevator:
+          type: number
+          example: 0
+        parking:
+          example:
+            - underground
+          type: array
+          items:
+            type: string
+        yard:
+          example:
+            - playground
+          type: array
+          items:
+            type: string
+        concierge:
+          type: boolean
+          example: false
+        chute:
+          type: boolean
+          example: false
+        gas:
+          type: boolean
+          example: false
+        furniture:
+          type: array
+          items:
+            type: string
+        appliances:
+          type: array
+          items:
+            type: string
+        internet:
+          type: array
+          items:
+            type: string
+        maxTenants:
+          type: number
+        childrenAllowed:
+          type: boolean
+          example: false
+        petsAllowed:
+          type: boolean
+          example: false
+        smokingAllowed:
+          type: boolean
+          example: false
+        latitude:
+          type: string
+          example: '55.7558'
+        longitude:
+          type: string
+          example: '37.6173'
+        videoUrl:
+          type: string
+          example: https://youtu.be/abc
+        manager:
+          $ref: '#/components/schemas/PropertyManagerResponse'
+        createdAt:
+          type: string
+          example: '2026-02-20T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-02-20T12:00:00.000Z'
+        rentTerms:
+          $ref: '#/components/schemas/PropertyRentTermsResponse'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyImageResponse'
+        utilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyUtilityResponse'
+        additionalServices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyAdditionalServiceResponse'
+      required:
+        - id
+        - ownerId
+        - status
+        - type
+        - address
+        - city
+        - balcony
+        - loggia
+        - wardrobe
+        - passengerElevator
+        - freightElevator
+        - parking
+        - yard
+        - concierge
+        - chute
+        - gas
+        - furniture
+        - appliances
+        - internet
+        - childrenAllowed
+        - petsAllowed
+        - smokingAllowed
+        - createdAt
+        - updatedAt
+        - images
+        - utilities
+        - additionalServices
+    ListPropertiesResponse:
+      type: object
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyResponse'
+        total:
+          type: number
+          example: 42
+      required:
+        - properties
+        - total
+    PropertyRentTermsInputDto:
+      type: object
+      properties:
+        rentAmount:
+          type: string
+          example: '50000.00'
+        rentCurrency:
+          type: string
+          example: RUB
+        rentPeriod:
+          type: string
+          enum:
+            - MONTHLY
+            - WEEKLY
+            - QUARTERLY
+            - YEARLY
+        vatPercent:
+          type: string
+          example: '20.00'
+        depositAmount:
+          type: string
+          example: '50000.00'
+        depositCurrency:
+          type: string
+          example: RUB
+        penaltyRate:
+          type: string
+          example: '0.5'
+        penaltyGraceDays:
+          type: number
+          example: 5
+      required:
+        - rentAmount
+        - rentCurrency
+        - rentPeriod
+    PropertyImageInputDto:
+      type: object
+      properties:
+        url:
+          type: string
+          example: https://cdn.example.com/img.jpg
+        order:
+          type: number
+          example: 0
+      required:
+        - url
+        - order
+    PropertyUtilityInputDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ELECTRICITY
+            - WATER
+            - HEATING
+            - WASTE
+        calculation:
+          type: string
+          enum:
+            - BY_METER
+            - PROPORTIONAL
+            - FIXED_PER_SQM
+            - FIXED_AMOUNT
+            - COEFFICIENT
+            - INCLUDED
+        paidBy:
+          type: string
+          enum:
+            - TENANT
+            - LANDLORD
+        hasSeparateMeter:
+          type: boolean
+          example: false
+        meterNumber:
+          type: string
+          example: METER-1234
+        ratePerSqm:
+          type: string
+          example: '50.00'
+        fixedAmount:
+          type: string
+          example: '1500.00'
+        coefficient:
+          type: string
+          example: '1.05'
+        propertyArea:
+          type: string
+          example: '65.5'
+        buildingArea:
+          type: string
+          example: '5400'
+        currency:
+          type: string
+          example: RUB
+      required:
+        - type
+        - calculation
+        - paidBy
+        - currency
+    PropertyAdditionalServiceInputDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Cleaning
+        pricePerUnit:
+          type: string
+          example: '1500.00'
+        currency:
+          type: string
+          example: RUB
+        quantity:
+          type: string
+          example: '1'
+        unit:
+          type: string
+          example: visit
+        includeVat:
+          type: boolean
+          example: false
+      required:
+        - name
+        - pricePerUnit
+        - currency
+        - quantity
+        - includeVat
+    CreatePropertyRequest:
+      type: object
+      properties:
+        managerId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        type:
+          type: string
+          enum:
+            - APARTMENT
+            - HOUSE
+            - ROOM
+            - OFFICE
+            - LAND
+        description:
+          type: string
+          example: Bright corner apartment
+        address:
+          type: string
+          example: ul. Lenina, 42
+        city:
+          type: string
+          example: Moscow
+        area:
+          type: string
+          example: '65.5'
+        livingArea:
+          type: string
+          example: '52.0'
+        rooms:
+          type: number
+          example: 3
+        floor:
+          type: number
+          example: 5
+        totalFloors:
+          type: number
+          example: 9
+        yearBuilt:
+          type: number
+          example: 1985
+        buildingType:
+          type: string
+          enum:
+            - BRICK
+            - PANEL
+            - MONOLITH
+            - WOOD
+            - BLOCK
+            - OTHER
+        renovation:
+          type: string
+          enum:
+            - NONE
+            - COSMETIC
+            - EURO
+            - DESIGNER
+        bathroom:
+          type: string
+          enum:
+            - SEPARATE
+            - COMBINED
+            - SEVERAL
+        bathroomCount:
+          type: number
+          example: 2
+        balcony:
+          type: boolean
+          example: false
+        loggia:
+          type: boolean
+          example: false
+        wardrobe:
+          type: boolean
+          example: false
+        passengerElevator:
+          type: number
+          example: 1
+          description: Number of passenger elevators
+        freightElevator:
+          type: number
+          example: 0
+          description: Number of freight elevators
+        parking:
+          example:
+            - underground
+            - surface
+          type: array
+          items:
+            type: string
+        yard:
+          example:
+            - playground
+            - closed
+          type: array
+          items:
+            type: string
+        concierge:
+          type: boolean
+          example: false
+        chute:
+          type: boolean
+          example: false
+        gas:
+          type: boolean
+          example: false
+        latitude:
+          type: number
+          example: 55.7558123
+        longitude:
+          type: number
+          example: 37.6173456
+        videoUrl:
+          type: string
+          example: https://youtu.be/xyz
+        furniture:
+          example:
+            - BED
+            - WARDROBE
+          type: array
+          items:
+            type: string
+        appliances:
+          example:
+            - FRIDGE
+          type: array
+          items:
+            type: string
+        internet:
+          example:
+            - WIFI
+          type: array
+          items:
+            type: string
+        maxTenants:
+          type: number
+          example: 4
+        childrenAllowed:
+          type: boolean
+          example: false
+        petsAllowed:
+          type: boolean
+          example: false
+        smokingAllowed:
+          type: boolean
+          example: false
+        rentTerms:
+          $ref: '#/components/schemas/PropertyRentTermsInputDto'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyImageInputDto'
+        utilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyUtilityInputDto'
+        additionalServices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyAdditionalServiceInputDto'
+      required:
+        - type
+        - address
+        - city
+    UpdatePropertyRequest:
+      type: object
+      properties:
+        managerId:
+          type: string
+        type:
+          type: string
+          enum:
+            - APARTMENT
+            - HOUSE
+            - ROOM
+            - OFFICE
+            - LAND
+        description:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        area:
+          type: string
+          example: '70.0'
+        livingArea:
+          type: string
+          example: '60.0'
+        rooms:
+          type: number
+        floor:
+          type: number
+        totalFloors:
+          type: number
+        yearBuilt:
+          type: number
+        buildingType:
+          type: string
+          enum:
+            - BRICK
+            - PANEL
+            - MONOLITH
+            - WOOD
+            - BLOCK
+            - OTHER
+        renovation:
+          type: string
+          enum:
+            - NONE
+            - COSMETIC
+            - EURO
+            - DESIGNER
+        bathroom:
+          type: string
+          enum:
+            - SEPARATE
+            - COMBINED
+            - SEVERAL
+        bathroomCount:
+          type: number
+          example: 2
+        balcony:
+          type: boolean
+        loggia:
+          type: boolean
+        wardrobe:
+          type: boolean
+        passengerElevator:
+          type: number
+          example: 1
+        freightElevator:
+          type: number
+          example: 0
+        parking:
+          type: array
+          items:
+            type: string
+        yard:
+          type: array
+          items:
+            type: string
+        concierge:
+          type: boolean
+        chute:
+          type: boolean
+        gas:
+          type: boolean
+        latitude:
+          type: number
+          example: 55.7558123
+        longitude:
+          type: number
+          example: 37.6173456
+        videoUrl:
+          type: string
+          example: https://youtu.be/xyz
+        furniture:
+          type: array
+          items:
+            type: string
+        appliances:
+          type: array
+          items:
+            type: string
+        internet:
+          type: array
+          items:
+            type: string
+        maxTenants:
+          type: number
+        childrenAllowed:
+          type: boolean
+        petsAllowed:
+          type: boolean
+        smokingAllowed:
+          type: boolean
+    UpdatePropertyStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - AVAILABLE
+            - RENTED
+            - ARCHIVED
+          example: RENTED
+      required:
+        - status
+    GenerateUploadUrlBodyDto:
+      type: object
+      properties:
+        contentType:
+          type: string
+          example: image/jpeg
+        fileName:
+          type: string
+          example: kitchen.jpg
+      required:
+        - contentType
+    UpsertRentTermsRequest:
+      type: object
+      properties:
+        rentAmount:
+          type: string
+          example: '50000.00'
+        rentCurrency:
+          type: string
+          example: RUB
+        rentPeriod:
+          type: string
+          enum:
+            - MONTHLY
+            - WEEKLY
+            - QUARTERLY
+            - YEARLY
+        vatPercent:
+          type: string
+          example: '20.00'
+        depositAmount:
+          type: string
+          example: '50000.00'
+        depositCurrency:
+          type: string
+          example: RUB
+        penaltyRate:
+          type: string
+          example: '0.5'
+        penaltyGraceDays:
+          type: number
+          example: 5
+      required:
+        - rentAmount
+        - rentCurrency
+        - rentPeriod
+    AddImageRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          example: https://cdn.example.com/img.jpg
+        order:
+          type: number
+          example: 0
+      required:
+        - url
+    ReorderImagesRequest:
+      type: object
+      properties:
+        orderedImageIds:
+          type: array
+          items:
+            type: string
+      required:
+        - orderedImageIds
+    UpsertUtilityRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ELECTRICITY
+            - WATER
+            - HEATING
+            - WASTE
+        calculation:
+          type: string
+          enum:
+            - BY_METER
+            - PROPORTIONAL
+            - FIXED_PER_SQM
+            - FIXED_AMOUNT
+            - COEFFICIENT
+            - INCLUDED
+        paidBy:
+          type: string
+          enum:
+            - TENANT
+            - LANDLORD
+        hasSeparateMeter:
+          type: boolean
+          example: false
+        meterNumber:
+          type: string
+          example: METER-1234
+        ratePerSqm:
+          type: string
+          example: '50.00'
+        fixedAmount:
+          type: string
+          example: '1500.00'
+        coefficient:
+          type: string
+          example: '1.05'
+        propertyArea:
+          type: string
+          example: '65.5'
+        buildingArea:
+          type: string
+          example: '5400'
+        currency:
+          type: string
+          example: RUB
+      required:
+        - type
+        - calculation
+        - paidBy
+        - currency
+    CreateAdditionalServiceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Cleaning
+        pricePerUnit:
+          type: string
+          example: '1500.00'
+        currency:
+          type: string
+          example: RUB
+        quantity:
+          type: string
+          example: '1'
+        unit:
+          type: string
+          example: visit
+        includeVat:
+          type: boolean
+          example: false
+      required:
+        - name
+        - pricePerUnit
+        - currency
+        - quantity
+        - includeVat
+    UpdateAdditionalServiceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Cleaning
+        pricePerUnit:
+          type: string
+          example: '1500.00'
+        currency:
+          type: string
+          example: RUB
+        quantity:
+          type: string
+          example: '1'
+        unit:
+          type: string
+          example: visit
+        includeVat:
+          type: boolean
+          example: false
+      required:
+        - name
+        - pricePerUnit
+        - currency
+        - quantity
+        - includeVat
+    CreateContactRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        type:
+          type: string
+          enum:
+            - TENANT
+            - LANDLORD
+        source:
+          type: string
+        company:
+          type: string
+        userId:
+          type: string
+      required:
+        - name
+        - type
+    UpdateContactRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        source:
+          type: string
+        company:
+          type: string
+    UpdateContactStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - POSITIVE
+            - MODERATE
+            - NEGATIVE
+          example: POSITIVE
+      required:
+        - status
+    CreateContactNoteRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        authorId:
+          type: string
+      required:
+        - text
+    UpsertContactKycRequest:
+      type: object
+      properties:
+        tenantType:
+          type: string
+          enum:
+            - INDIVIDUAL
+            - ENTITY
+            - ENTREPRENEUR
+            - COMPANY
+        fullName:
+          type: string
+        registrationAddr:
+          type: string
+        phone:
+          type: string
+        passportSeries:
+          type: string
+        passportNumber:
+          type: string
+        passportIssuedBy:
+          type: string
+        inn:
+          type: string
+        attorneyNumber:
+          type: string
+        attorneyFrom:
+          type: string
+          format: date-time
+        attorneyTo:
+          type: string
+          format: date-time
+        representative:
+          type: string
+        bank:
+          type: string
+        bankAccount:
+          type: string
+        corrAccount:
+          type: string
+        bik:
+          type: string
+        signatory:
+          type: string
+        ogrn:
+          type: string
+        kpp:
+          type: string
+      required:
+        - tenantType
+    CreateDealRequest:
+      type: object
+      properties:
+        contactId:
+          type: string
+        propertyId:
+          type: string
+        source:
+          type: string
+        title:
+          type: string
+        managerId:
+          type: string
+        amount:
+          type: string
+          description: Decimal monetary amount, transmitted as string
+        currency:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+      required:
+        - contactId
+    UpdateDealRequest:
+      type: object
+      properties:
+        propertyId:
+          type: string
+        title:
+          type: string
+        managerId:
+          type: string
+        amount:
+          type: string
+          description: Decimal monetary amount, transmitted as string
+        currency:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+    UpdateDealStageRequest:
+      type: object
+      properties:
+        stage:
+          type: string
+          enum:
+            - NEW
+            - CONTACT
+            - NEGOTIATION
+            - VIEWING
+            - CONTRACT
+            - ACTIVE
+            - CLOSED
+            - CANCELLED
+      required:
+        - stage
+    UpdateDealStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - COMPLETED
+            - CLOSED
+            - CANCELLED
+      required:
+        - status
+    CreateDealMessageRequest:
+      type: object
+      properties:
+        channel:
+          type: string
+          enum:
+            - AVITO
+            - CIAN
+            - TELEGRAM
+            - WHATSAPP
+            - EMAIL
+        content:
+          type: string
+        attachmentUrl:
+          type: string
+        attachmentName:
+          type: string
+        attachmentSize:
+          type: number
+          minimum: 0
+        idempotencyKey:
+          type: string
+          description: >-
+            Client-side idempotency key (uuid). Resend with the same key returns
+            the existing message instead of duplicating it in the external
+            messenger.
+      required:
+        - channel
+        - content
+    MarkDealMessageReadRequest:
+      type: object
+      properties:
+        dealId:
+          type: string
+      required:
+        - dealId
+    CreateDealMeetingRequest:
+      type: object
+      properties:
+        scheduledAt:
+          type: string
+          format: date-time
+        address:
+          type: string
+        notes:
+          type: string
+      required:
+        - scheduledAt
+        - address
+    UpdateDealMeetingRequest:
+      type: object
+      properties:
+        scheduledAt:
+          type: string
+          format: date-time
+        address:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+          enum:
+            - SCHEDULED
+            - CONFIRMED
+            - COMPLETED
+            - CANCELLED
+    CreateDealNoteRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        authorId:
+          type: string
+      required:
+        - text
+    CreateDealTaskRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - CALL
+            - MEETING
+            - EMAIL
+            - OTHER
+        description:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        responsibleId:
+          type: string
+      required:
+        - type
+        - description
+    UpdateDealTaskRequest:
+      type: object
+      properties:
+        isDone:
+          type: boolean
+        description:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        responsibleId:
+          type: string
+    TaskBindingDto:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+            - DEAL
+            - RENTAL
+            - PROPERTY
+            - CONTACT
+        id:
+          type: string
+      required:
+        - kind
+        - id
+    CreateTaskRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - CALL
+            - MEETING
+            - EMAIL
+            - OTHER
+        description:
+          type: string
+          example: Schedule property visit
+        clientName:
+          type: string
+          example: John Doe
+        clientPhone:
+          type: string
+          example: '+79991234567'
+        address:
+          type: string
+          example: ul. Lenina, 42
+        responsibleId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        dueDate:
+          type: string
+          example: '2026-05-01T12:00:00.000Z'
+      required:
+        - type
+        - description
+    UpdateTaskRequest:
+      type: object
+      properties:
+        isDone:
+          type: boolean
+          example: true
+        description:
+          type: string
+          example: Updated task description
+        dueDate:
+          type: string
+          example: '2026-05-01T12:00:00.000Z'
+        responsibleId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+    ClientFlowMetricsResponse:
+      type: object
+      properties:
+        requestsCount:
+          type: number
+        requestsChange:
+          type: string
+          description: Signed percent vs previous period, e.g. "+12.50"
+        avgResponseTimeMs:
+          type: number
+        conversionRate:
+          type: number
+          description: 0..1
+      required:
+        - requestsCount
+        - requestsChange
+        - avgResponseTimeMs
+        - conversionRate
+    DashboardEventEntityResponse:
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        label:
+          type: string
+      required:
+        - type
+        - id
+        - label
+    DashboardEventResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+        at:
+          type: string
+          description: ISO-8601 datetime
+        title:
+          type: string
+        subtitle:
+          type: string
+        entity:
+          $ref: '#/components/schemas/DashboardEventEntityResponse'
+      required:
+        - id
+        - kind
+        - at
+        - title
+    ListDashboardEventsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardEventResponse'
+      required:
+        - items
+    RentalResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        propertyId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        tenantContactId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        dealId:
+          type: string
+          example: deal_X6KBMTnCDkbrPN_I0YXG8
+        status:
+          type: string
+          example: ACTIVE
+        startDate:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        endDate:
+          type: string
+          example: '2027-05-01T00:00:00.000Z'
+        nextPaymentDate:
+          type: string
+          example: '2026-06-01T00:00:00.000Z'
+        paymentStatus:
+          type: string
+          example: PENDING
+        incompleteReason:
+          type: string
+          example: AWAITING_PAYMENT
+        period:
+          type: string
+          example: MONTHLY
+        rentAmount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        vatPercent:
+          type: string
+          example: '20.00'
+        depositAmount:
+          type: string
+          example: '50000.00'
+        depositCurrency:
+          type: string
+          example: RUB
+        penaltyRate:
+          type: string
+          example: '0.5'
+        penaltyGraceDays:
+          type: number
+          example: 5
+        createdAt:
+          type: string
+          example: '2026-04-01T00:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-04-01T00:00:00.000Z'
+        propertyAddress:
+          type: string
+          example: ул. Ленина, 1
+        tenantName:
+          type: string
+          example: Иван Иванов
+      required:
+        - id
+        - propertyId
+        - tenantContactId
+        - status
+        - startDate
+        - paymentStatus
+        - period
+        - rentAmount
+        - currency
+        - depositCurrency
+        - createdAt
+        - updatedAt
+    ListRentalsResponse:
+      type: object
+      properties:
+        rentals:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalResponse'
+        total:
+          type: number
+          example: 42
+      required:
+        - rentals
+        - total
+    CreateRentalRequest:
+      type: object
+      properties:
+        propertyId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        tenantContactId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        dealId:
+          type: string
+          example: deal_X6KBMTnCDkbrPN_I0YXG8
+        period:
+          type: string
+          enum:
+            - MONTHLY
+            - WEEKLY
+            - QUARTERLY
+            - YEARLY
+        rentAmount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        startDate:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        endDate:
+          type: string
+          example: '2027-05-01T00:00:00.000Z'
+        vatPercent:
+          type: string
+          example: '20.00'
+        depositAmount:
+          type: string
+          example: '50000.00'
+        depositCurrency:
+          type: string
+          example: RUB
+        penaltyRate:
+          type: string
+          example: '0.5'
+        penaltyGraceDays:
+          type: number
+          example: 5
+      required:
+        - propertyId
+        - tenantContactId
+        - period
+        - rentAmount
+        - currency
+        - startDate
+    UpdateRentalRequest:
+      type: object
+      properties:
+        startDate:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        endDate:
+          type: string
+          example: '2027-05-01T00:00:00.000Z'
+        rentAmount:
+          type: string
+          example: '55000.00'
+        period:
+          type: string
+          enum:
+            - MONTHLY
+            - WEEKLY
+            - QUARTERLY
+            - YEARLY
+        vatPercent:
+          type: string
+          example: '20.00'
+        depositAmount:
+          type: string
+          example: '55000.00'
+        penaltyRate:
+          type: string
+          example: '0.5'
+        penaltyGraceDays:
+          type: number
+          example: 5
+    UpdateRentalStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - UPCOMING
+            - CLOSING
+            - COMPLETED
+      required:
+        - status
+    UpsertAutomationRequest:
+      type: object
+      properties:
+        paymentDay:
+          type: number
+          example: 5
+          minimum: 1
+          maximum: 31
+        invoiceFormation:
+          type: string
+          enum:
+            - WHEN_CREATED
+            - DAYS_BEFORE_PAYMENT
+            - ON_PAYMENT_DAY
+        invoiceFormationDaysBefore:
+          type: number
+          example: 3
+        sendToTenantMode:
+          type: string
+          enum:
+            - AUTOMATIC
+            - MANUAL
+            - ON_CONFIRMATION
+        sendToTenantAt:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        actFormation:
+          type: string
+          enum:
+            - ON_INVOICE_ISSUE
+            - ON_PAYMENT
+            - MANUAL
+        accrualDistribution:
+          type: string
+          enum:
+            - ALL_IN_ONE
+            - SEPARATE_INVOICE_PER_TYPE
+        reminderBeforeDaysBefore:
+          type: number
+          example: 3
+        remindOnDueDate:
+          type: boolean
+          example: true
+        repeatReminderEveryDays:
+          type: number
+          example: 2
+        repeatReminderMaxTimes:
+          type: number
+          example: 3
+        paymentDistribution:
+          type: string
+          enum:
+            - PENALTY_FIRST
+            - RENT_FIRST
+            - UTILITIES_FIRST
+            - PROPORTIONAL
+        utilityReadingsRequestDaysBefore:
+          type: number
+          example: 5
+        utilityRemindOnCalculationDay:
+          type: boolean
+          example: false
+        completionReminderDaysBefore:
+          type: number
+          example: 30
+      required:
+        - paymentDay
+        - invoiceFormation
+        - sendToTenantMode
+        - actFormation
+        - accrualDistribution
+        - remindOnDueDate
+        - paymentDistribution
+        - utilityRemindOnCalculationDay
+    CreateNoteRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Tenant called about water leak
+        content:
+          type: string
+          example: Detailed description of the conversation.
+      required:
+        - content
+    FinanceMetricsResponse:
+      type: object
+      properties:
+        accruals:
+          type: string
+          example: '500000.00'
+        accrualsChange:
+          type: string
+          example: '12.5'
+        income:
+          type: string
+          example: '480000.00'
+        incomeChange:
+          type: string
+          example: '8.3'
+        debt:
+          type: string
+          example: '20000.00'
+        debtChange:
+          type: string
+          example: '-5.0'
+        currency:
+          type: string
+          example: RUB
+      required:
+        - accruals
+        - accrualsChange
+        - income
+        - incomeChange
+        - debt
+        - debtChange
+        - currency
+    InvoiceItemResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        invoiceId:
+          type: string
+        description:
+          type: string
+        amount:
+          type: string
+          example: '50000.00'
+        qty:
+          type: string
+          example: '1'
+        unit:
+          type: string
+          example: months
+      required:
+        - id
+        - invoiceId
+        - description
+        - amount
+        - qty
+    InvoiceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        rentalId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        type:
+          type: string
+          example: RENT
+        status:
+          type: string
+          example: PENDING
+        title:
+          type: string
+          example: Rent — May 2026
+        amount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        periodStart:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        periodEnd:
+          type: string
+          example: '2026-05-31T23:59:59.999Z'
+        dueDate:
+          type: string
+          example: '2026-05-05T00:00:00.000Z'
+        paidAt:
+          type: string
+          example: '2026-05-04T12:00:00.000Z'
+        createdAt:
+          type: string
+          example: '2026-04-15T00:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-04-15T00:00:00.000Z'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemResponse'
+        propertyId:
+          type: string
+        propertyTitle:
+          type: string
+        propertyAddress:
+          type: string
+        tenantId:
+          type: string
+        tenantName:
+          type: string
+        invoiceNumber:
+          type: string
+          example: '82'
+        invoiceIssueDate:
+          type: string
+          example: '2026-04-15T00:00:00.000Z'
+        tenantInn:
+          type: string
+        tenantKpp:
+          type: string
+        tenantAddress:
+          type: string
+        vatAmount:
+          type: string
+          example: '8333.33'
+        vatPercent:
+          type: number
+          example: 20
+        amountInWords:
+          type: string
+          example: Пятьдесят тысяч рублей 00 копеек
+      required:
+        - id
+        - rentalId
+        - type
+        - status
+        - title
+        - amount
+        - currency
+        - periodStart
+        - periodEnd
+        - createdAt
+        - updatedAt
+        - items
+    ListInvoicesResponse:
+      type: object
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceResponse'
+        total:
+          type: number
+          example: 42
+      required:
+        - invoices
+        - total
+    InvoiceItemInputDto:
+      type: object
+      properties:
+        description:
+          type: string
+          example: Rent for May
+        amount:
+          type: string
+          example: '50000.00'
+        qty:
+          type: string
+          example: '1'
+        unit:
+          type: string
+          example: months
+      required:
+        - description
+        - amount
+        - qty
+    CreateInvoiceRequest:
+      type: object
+      properties:
+        rentalId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        type:
+          type: string
+          enum:
+            - RENT
+            - DEPOSIT
+            - UTILITIES
+            - PENALTY
+            - ADDITIONAL
+            - ONE_TIME
+        title:
+          type: string
+          example: Rent invoice — May 2026
+        amount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        periodStart:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        periodEnd:
+          type: string
+          example: '2026-05-31T23:59:59.999Z'
+        dueDate:
+          type: string
+          example: '2026-05-05T00:00:00.000Z'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItemInputDto'
+      required:
+        - rentalId
+        - type
+        - title
+        - amount
+        - currency
+        - periodStart
+        - periodEnd
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        invoiceId:
+          type: string
+        amount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        paymentMethod:
+          type: string
+          example: BANK_TRANSFER
+        externalRef:
+          type: string
+        recordedAt:
+          type: string
+          example: '2026-05-04T12:00:00.000Z'
+        propertyId:
+          type: string
+        propertyTitle:
+          type: string
+        tenantId:
+          type: string
+        tenantName:
+          type: string
+        periodStart:
+          type: string
+          example: '2026-06-01T00:00:00.000Z'
+        periodEnd:
+          type: string
+          example: '2026-06-30T23:59:59.000Z'
+        invoiceTitle:
+          type: string
+          example: Аренда за июнь 2026
+      required:
+        - id
+        - amount
+        - currency
+        - paymentMethod
+        - recordedAt
+    ListTransactionsResponse:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+        total:
+          type: number
+          example: 42
+      required:
+        - transactions
+        - total
+    CreateTransactionRequest:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        amount:
+          type: string
+          example: '50000.00'
+        currency:
+          type: string
+          example: RUB
+        paymentMethod:
+          type: string
+          enum:
+            - KASSA
+            - CASH
+            - BANK_TRANSFER
+            - CARD
+        externalRef:
+          type: string
+          example: TXN-123
+      required:
+        - amount
+        - currency
+        - paymentMethod
+    UpdateInvoiceRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - PENDING
+            - PAID
+            - OVERDUE
+            - CANCELLED
+            - ADJUSTED
+            - PARTIAL
+        title:
+          type: string
+          example: Updated title
+        amount:
+          type: string
+          example: '55000.00'
+        dueDate:
+          type: string
+          example: '2026-05-10T00:00:00.000Z'
+        paidAt:
+          type: string
+          example: '2026-05-08T00:00:00.000Z'
+    TemplateBlockResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        templateId:
+          type: string
+        type:
+          type: string
+          example: SECTION
+        content:
+          type: string
+        fieldType:
+          type: string
+          example: TEXT_AREA
+        fieldKey:
+          type: string
+          example: subject.address
+        blockOrder:
+          type: number
+          example: 1
+      required:
+        - id
+        - templateId
+        - type
+        - content
+        - blockOrder
+    DocumentTemplateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          example: Lease contract — individual
+        type:
+          type: string
+          example: LEASE_CONTRACT
+        baseTemplateId:
+          type: string
+        isArchived:
+          type: boolean
+          example: false
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          example: '2026-04-01T00:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-04-01T00:00:00.000Z'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateBlockResponse'
+        authorName:
+          type: string
+          example: Roman M.
+        authorInitials:
+          type: string
+          example: RM
+      required:
+        - id
+        - title
+        - type
+        - isArchived
+        - createdAt
+        - updatedAt
+        - blocks
+    ListTemplatesResponse:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTemplateResponse'
+        total:
+          type: number
+          example: 4
+      required:
+        - templates
+        - total
+    TemplateAuthorResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: Roman M.
+        initials:
+          type: string
+          example: RM
+      required:
+        - id
+        - name
+    ListTemplateAuthorsResponse:
+      type: object
+      properties:
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateAuthorResponse'
+      required:
+        - authors
+    TemplateBlockInputDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - SECTION
+            - SUBSECTION
+            - TEXT
+            - FIELD
+        content:
+          type: string
+          example: 1. Subject of contract
+        fieldType:
+          type: string
+          enum:
+            - TEXT_AREA
+            - DATE_PICKER
+            - DATE_RANGE_PICKER
+        fieldKey:
+          type: string
+          example: subject.address
+        blockOrder:
+          type: number
+          example: 1
+      required:
+        - type
+        - content
+        - blockOrder
+    CreateTemplateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lease contract — individual
+        type:
+          type: string
+          enum:
+            - LEASE_CONTRACT
+            - ACT_TRANSFER
+            - ACT_RETURN
+            - APPENDIX
+            - REGISTRATION_APPLICATION
+            - OTHER
+          example: LEASE_CONTRACT
+        baseTemplateId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateBlockInputDto'
+      required:
+        - title
+        - blocks
+    UpdateTemplateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lease contract — updated
+        isArchived:
+          type: boolean
+          example: false
+        type:
+          type: string
+          enum:
+            - LEASE_CONTRACT
+            - ACT_TRANSFER
+            - ACT_RETURN
+            - APPENDIX
+            - REGISTRATION_APPLICATION
+            - OTHER
+          example: LEASE_CONTRACT
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateBlockInputDto'
+      required:
+        - blocks
+    TemplateVersionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        templateId:
+          type: string
+        blocksJson:
+          type: string
+          description: JSON snapshot of blocks
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - templateId
+        - blocksJson
+        - createdAt
+    ListTemplateVersionsResponse:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateVersionResponse'
+      required:
+        - versions
+    TemplateHistoryEntryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        templateId:
+          type: string
+        kind:
+          type: string
+          example: created
+          enum:
+            - created
+            - modified
+            - archived
+            - restored
+        at:
+          type: string
+          example: '2026-04-01T00:00:00.000Z'
+        actorId:
+          type: string
+        actorName:
+          type: string
+          example: Roman M.
+      required:
+        - id
+        - templateId
+        - kind
+        - at
+    ListTemplateHistoryResponse:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateHistoryEntryResponse'
+      required:
+        - entries
+    DocumentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        templateId:
+          type: string
+        type:
+          type: string
+          example: LEASE_CONTRACT
+        title:
+          type: string
+          example: Lease contract Smith / 42 Lenina St
+        status:
+          type: string
+          example: DRAFT
+        entityType:
+          type: string
+          example: RENTAL
+        entityId:
+          type: string
+        filledDataJson:
+          type: string
+        fileUrl:
+          type: string
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        propertyId:
+          type: string
+        propertyTitle:
+          type: string
+        propertyAddress:
+          type: string
+        rentalTitle:
+          type: string
+        rentalDates:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - status
+        - entityType
+        - entityId
+        - createdAt
+        - updatedAt
+    ListDocumentsResponse:
+      type: object
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentResponse'
+        total:
+          type: number
+          example: 12
+      required:
+        - documents
+        - total
+    GenerateDocumentUploadUrlRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          example: application/pdf
+        fileName:
+          type: string
+          example: lease-2026.pdf
+      required:
+        - contentType
+    GenerateDocumentUploadUrlResponse:
+      type: object
+      properties:
+        uploadUrl:
+          type: string
+          example: https://s3.example.com/bucket/documents/...
+        publicUrl:
+          type: string
+          example: https://s3.example.com/bucket/documents/...
+        key:
+          type: string
+          example: documents/2026/05/abc.pdf
+        expiresAt:
+          type: string
+          example: '2026-05-17T16:25:00.000Z'
+      required:
+        - uploadUrl
+        - publicUrl
+        - key
+        - expiresAt
+    CreateDocumentRequest:
+      type: object
+      properties:
+        templateId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        type:
+          type: string
+          enum:
+            - LEASE_CONTRACT
+            - ACT_TRANSFER
+            - ACT_RETURN
+            - APPENDIX
+            - REGISTRATION_APPLICATION
+            - OTHER
+        title:
+          type: string
+          example: Lease contract Smith / 42 Lenina St
+        entityType:
+          type: string
+          enum:
+            - DEAL
+            - RENTAL
+            - PROPERTY
+            - CONTACT
+        entityId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        filledDataJson:
+          type: string
+          example: '{"block_1":"value"}'
+      required:
+        - type
+        - title
+        - entityType
+        - entityId
+    UpdateDocumentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Updated title
+        filledDataJson:
+          type: string
+        fileUrl:
+          type: string
+    UpdateDocumentStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - DATA_FILLED
+            - SIGNED_BY_ME
+            - SENT
+            - SIGNED_BY_TENANT
+            - SIGNED_BY_BOTH
+      required:
+        - status
+    DocumentSignatureResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        documentId:
+          type: string
+        signedByAccountId:
+          type: string
+        signedByContactId:
+          type: string
+        signedAt:
+          type: string
+        signingMethod:
+          type: string
+          example: E_SIGNATURE
+        signatureProofJson:
+          type: string
+      required:
+        - id
+        - documentId
+        - signedAt
+        - signingMethod
+    ListSignaturesResponse:
+      type: object
+      properties:
+        signatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentSignatureResponse'
+      required:
+        - signatures
+    CreateSignatureRequest:
+      type: object
+      properties:
+        signedByAccountId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        signedByContactId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        signingMethod:
+          type: string
+          enum:
+            - E_SIGNATURE
+            - MANUAL_UPLOAD
+            - DMS_INTEGRATION
+        signatureProofJson:
+          type: string
+          example: '{"ip":"1.2.3.4"}'
+      required:
+        - signingMethod
+    ConnectionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        accountId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        platform:
+          type: string
+          example: CIAN
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+      required:
+        - id
+        - accountId
+        - platform
+        - isActive
+    ConnectPlatformRequest:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+            - AVITO
+            - CIAN
+            - SITE
+          example: CIAN
+        credentialsJson:
+          type: string
+          example: '{"accessKey":"your-cian-api-key"}'
+          description: JSON-encoded platform credentials
+      required:
+        - platform
+        - credentialsJson
+    ExternalListingResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        propertyId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        platform:
+          type: string
+          example: CIAN
+        externalId:
+          type: string
+          example: '123456789'
+        status:
+          type: string
+          example: PUBLISHED
+        favoritesCount:
+          type: number
+          example: 12
+        viewsCount:
+          type: number
+          example: 348
+        hasPendingChanges:
+          type: boolean
+          example: false
+        lastSyncedAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+        error:
+          type: string
+          example: null
+        createdAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+      required:
+        - id
+        - propertyId
+        - platform
+        - status
+        - favoritesCount
+        - viewsCount
+        - hasPendingChanges
+        - createdAt
+        - updatedAt
+    PublishListingRequest:
+      type: object
+      properties:
+        propertyId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        platform:
+          type: string
+          enum:
+            - AVITO
+            - CIAN
+            - SITE
+          example: CIAN
+      required:
+        - propertyId
+        - platform
+    StartImportRequest:
+      type: object
+      properties:
+        sourceUrl:
+          type: string
+          example: https://www.cian.ru/rent/flat/123456789/
+          description: Public listing URL on Avito/Cian/etc.
+        connectionId:
+          type: string
+          description: >-
+            Connected platform account id used to fetch the listing (Avito
+            OAuth).
+      required:
+        - sourceUrl
+    PublicationImportResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        sourceUrl:
+          type: string
+          example: https://www.cian.ru/rent/flat/123456789/
+        platform:
+          type: string
+          example: CIAN
+        status:
+          type: string
+          example: READY
+        parsedPayloadJson:
+          type: string
+          example: '{"address":"...","area":42}'
+          description: JSON-encoded parsed payload
+        importedPropertyId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        error:
+          type: string
+          example: null
+        createdAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-03-08T12:00:00.000Z'
+      required:
+        - id
+        - sourceUrl
+        - status
+        - createdAt
+        - updatedAt
+    CompleteImportRequest:
+      type: object
+      properties:
+        ownerId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        payloadJson:
+          type: string
+          example: '{"utility":{"electricity":"INDIVIDUAL"}}'
+          description: JSON-encoded payload with extra fields filled in by the user
+      required:
+        - ownerId
+        - payloadJson
+    CompleteAvitoOauthRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Authorization code returned by Avito
+        state:
+          type: string
+          description: Opaque state echoed back from /oauth/url
+      required:
+        - code
+        - state
+    ImportAvitoItemsRequest:
+      type: object
+      properties:
+        avitoItemIds:
+          description: List of Avito item ids to import as Property + ExternalListing
+          type: array
+          items:
+            type: string
+      required:
+        - avitoItemIds
+    CreateStudioLeadRequest:
+      type: object
+      properties:
+        propertyId:
+          type: string
+          example: cuid-of-property
+        name:
+          type: string
+          example: Иван Иванов
+        phone:
+          type: string
+          example: '+79991234567'
+        comment:
+          type: string
+        sourceSlug:
+          type: string
+          example: my-cosy-flat
+      required:
+        - propertyId
+        - name
+        - phone
