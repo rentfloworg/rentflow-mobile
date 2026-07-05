@@ -1,0 +1,86 @@
+name: Build Conveyor
+
+# Per-client white-label build: profile -> branded signed AAB -> RuStore.
+# Triggered by builder-service (workflow_dispatch) or manually.
+on:
+  workflow_dispatch:
+    inputs:
+      client_slug:
+        description: Client build-profile slug
+        required: true
+        type: string
+      job_id:
+        description: builder-service BuildJob id (enables status callbacks)
+        required: false
+        type: string
+      publish:
+        description: Publish the AAB to RuStore
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: conveyor-${{ inputs.client_slug }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: 📦 ${{ inputs.client_slug }}
+    # Switch to [self-hosted, linux] once a runner is registered.
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.2'
+          channel: stable
+          cache: true
+
+      - name: Run conveyor
+        env:
+          CLIENT_SLUG: ${{ inputs.client_slug }}
+          JOB_ID: ${{ inputs.job_id }}
+          PUBLISH: ${{ inputs.publish }}
+          BUILDER_API_URL: ${{ secrets.BUILDER_API_URL }}
+          BUILDER_CI_TOKEN: ${{ secrets.BUILDER_CI_TOKEN }}
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          RUSTORE_KEY_ID: ${{ secrets.RUSTORE_KEY_ID }}
+          RUSTORE_PRIVATE_KEY: ${{ secrets.RUSTORE_PRIVATE_KEY }}
+        run: |
+          # Slugs are validated by builder-service (^[a-z0-9-]{2,32}$); re-check
+          # here since this also runs for manual dispatches.
+          case "$CLIENT_SLUG" in
+            (*[!a-z0-9-]*|'') echo "invalid client_slug"; exit 2 ;;
+          esac
+          set --
+          # Prefer the builder-service materialized profile; fall back to the
+          # committed profile file for manual runs without backend access.
+          if [ -n "$BUILDER_API_URL" ] && [ -n "$BUILDER_CI_TOKEN" ]; then
+            set -- "$@" --slug "$CLIENT_SLUG"
+          else
+            set -- "$@" --profile "profiles/$CLIENT_SLUG.json"
+          fi
+          if [ -n "$JOB_ID" ]; then
+            set -- "$@" --job-id "$JOB_ID"
+          fi
+          if [ "$PUBLISH" = "true" ]; then
+            set -- "$@" --publish
+          fi
+          bash tool/conveyor/build.sh "$@"
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.client_slug }}-aab
+          path: dist/*.aab
+          retention-days: 30

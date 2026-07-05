@@ -50,3 +50,7 @@ android/keystore.properties
 *.keystore
 *.jks
 *.defines.json
+
+# Conveyor outputs
+dist/
+build/keystores/

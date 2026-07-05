@@ -50,6 +50,8 @@ android {
         versionCode = clientProp("versionCode")?.toInt() ?: flutter.versionCode
         versionName = clientProp("versionName") ?: flutter.versionName
         resValue("string", "app_name", clientProp("appName") ?: "RentFlow")
+        // Custom scheme for the OAuth PKCE redirect (flutter_web_auth_2 callback).
+        manifestPlaceholders["oauthScheme"] = clientProp("oauthScheme") ?: "ru.rentflow.tenant"
     }
 
     signingConfigs {

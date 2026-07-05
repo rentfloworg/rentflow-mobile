@@ -1,0 +1,45 @@
+{
+  "client": "rentflow",
+  "identity": {
+    "appName": "RentFlow Аренда",
+    "applicationId": "ru.rentflow.tenant",
+    "versionName": "1.0.0",
+    "versionCode": 1
+  },
+  "branding": {
+    "primaryColor": "#0F172A",
+    "accentColor": "#4F46E5",
+    "backgroundColor": "#FFFFFF",
+    "logo": "assets/branding/logo.png"
+  },
+  "backend": {
+    "apiBaseUrl": "https://api.rentflow.tech",
+    "oauthBaseUrl": "https://id.rentflow.tech",
+    "oauthClientId": "rentflow-mobile",
+    "oauthRedirectUri": "ru.rentflow.tenant://oauth/callback",
+    "orgId": ""
+  },
+  "features": {
+    "payments": true,
+    "documents": true,
+    "archive": true,
+    "tickets": false,
+    "chat": false,
+    "negotiation": false,
+    "termination": false,
+    "kyc": false,
+    "push": false
+  },
+  "legal": {
+    "termsUrl": "https://rentflow.tech/terms",
+    "privacyUrl": "https://rentflow.tech/privacy"
+  },
+  "store": {
+    "shortDescription": "Личный кабинет арендатора: аренда, платежи, документы",
+    "fullDescription": "Приложение арендатора RentFlow: статус аренды, счета и оплата, документы и договоры — всё в одном месте.",
+    "whatsNew": "Первый релиз",
+    "email": "support@rentflow.tech",
+    "minAndroidVersion": 8,
+    "publishType": "MANUAL"
+  }
+}
