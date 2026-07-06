@@ -67,7 +67,7 @@ class AuthController extends Notifier<AuthState> {
     state = AuthAuthenticated(payload.subject ?? '');
   }
 
-  /// Call after any flow that produced a fresh token pair (OTP, PKCE).
+  /// Call after any flow that produced a fresh token pair (OTP).
   void signInWithTokens(AuthTokens tokens) {
     final payload = JwtPayload.tryDecode(tokens.accessToken);
     state = AuthAuthenticated(payload?.subject ?? '');
