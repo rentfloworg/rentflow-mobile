@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **email** | **String** |  | [optional] 
 **source_** | **String** |  | [optional] 
 **company** | **String** |  | [optional] 
+**mobileAccessEnabled** | **bool** | Tenant mobile app access for this contact. Enabling requires the contact to have an email (400 otherwise). | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

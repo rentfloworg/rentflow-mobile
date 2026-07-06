@@ -12,6 +12,8 @@ import 'package:rentflow_api/src/auth/oauth.dart';
 import 'package:rentflow_api/src/api/account_api.dart';
 import 'package:rentflow_api/src/api/app_api.dart';
 import 'package:rentflow_api/src/api/auth_api.dart';
+import 'package:rentflow_api/src/api/builder_api.dart';
+import 'package:rentflow_api/src/api/builder_ci_api.dart';
 import 'package:rentflow_api/src/api/crm_api.dart';
 import 'package:rentflow_api/src/api/dashboard_api.dart';
 import 'package:rentflow_api/src/api/document_templates_api.dart';
@@ -30,6 +32,7 @@ import 'package:rentflow_api/src/api/rental_invoices_api.dart';
 import 'package:rentflow_api/src/api/rentals_api.dart';
 import 'package:rentflow_api/src/api/studio_api.dart';
 import 'package:rentflow_api/src/api/tasks_api.dart';
+import 'package:rentflow_api/src/api/tenant_api.dart';
 import 'package:rentflow_api/src/api/users_api.dart';
 
 class RentflowApi {
@@ -102,6 +105,18 @@ class RentflowApi {
   /// by doing that all interceptors will not be executed
   AuthApi getAuthApi() {
     return AuthApi(dio, serializers);
+  }
+
+  /// Get BuilderApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  BuilderApi getBuilderApi() {
+    return BuilderApi(dio, serializers);
+  }
+
+  /// Get BuilderCIApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  BuilderCIApi getBuilderCIApi() {
+    return BuilderCIApi(dio, serializers);
   }
 
   /// Get CrmApi instance, base route and serializer can be overridden by a given but be careful,
@@ -210,6 +225,12 @@ class RentflowApi {
   /// by doing that all interceptors will not be executed
   TasksApi getTasksApi() {
     return TasksApi(dio, serializers);
+  }
+
+  /// Get TenantApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  TenantApi getTenantApi() {
+    return TenantApi(dio, serializers);
   }
 
   /// Get UsersApi instance, base route and serializer can be overridden by a given but be careful,

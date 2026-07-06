@@ -17,13 +17,20 @@ class _$UpdateContactRequest extends UpdateContactRequest {
   final String? source_;
   @override
   final String? company;
+  @override
+  final bool? mobileAccessEnabled;
 
   factory _$UpdateContactRequest(
           [void Function(UpdateContactRequestBuilder)? updates]) =>
       (UpdateContactRequestBuilder()..update(updates))._build();
 
   _$UpdateContactRequest._(
-      {this.name, this.phone, this.email, this.source_, this.company})
+      {this.name,
+      this.phone,
+      this.email,
+      this.source_,
+      this.company,
+      this.mobileAccessEnabled})
       : super._();
   @override
   UpdateContactRequest rebuild(
@@ -42,7 +49,8 @@ class _$UpdateContactRequest extends UpdateContactRequest {
         phone == other.phone &&
         email == other.email &&
         source_ == other.source_ &&
-        company == other.company;
+        company == other.company &&
+        mobileAccessEnabled == other.mobileAccessEnabled;
   }
 
   @override
@@ -53,6 +61,7 @@ class _$UpdateContactRequest extends UpdateContactRequest {
     _$hash = $jc(_$hash, email.hashCode);
     _$hash = $jc(_$hash, source_.hashCode);
     _$hash = $jc(_$hash, company.hashCode);
+    _$hash = $jc(_$hash, mobileAccessEnabled.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -64,7 +73,8 @@ class _$UpdateContactRequest extends UpdateContactRequest {
           ..add('phone', phone)
           ..add('email', email)
           ..add('source_', source_)
-          ..add('company', company))
+          ..add('company', company)
+          ..add('mobileAccessEnabled', mobileAccessEnabled))
         .toString();
   }
 }
@@ -93,6 +103,11 @@ class UpdateContactRequestBuilder
   String? get company => _$this._company;
   set company(String? company) => _$this._company = company;
 
+  bool? _mobileAccessEnabled;
+  bool? get mobileAccessEnabled => _$this._mobileAccessEnabled;
+  set mobileAccessEnabled(bool? mobileAccessEnabled) =>
+      _$this._mobileAccessEnabled = mobileAccessEnabled;
+
   UpdateContactRequestBuilder() {
     UpdateContactRequest._defaults(this);
   }
@@ -105,6 +120,7 @@ class UpdateContactRequestBuilder
       _email = $v.email;
       _source_ = $v.source_;
       _company = $v.company;
+      _mobileAccessEnabled = $v.mobileAccessEnabled;
       _$v = null;
     }
     return this;
@@ -131,6 +147,7 @@ class UpdateContactRequestBuilder
           email: email,
           source_: source_,
           company: company,
+          mobileAccessEnabled: mobileAccessEnabled,
         );
     replace(_$result);
     return _$result;

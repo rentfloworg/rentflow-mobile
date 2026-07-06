@@ -32,5 +32,11 @@ void main() {
       // TODO
     });
 
+    // Tenant mobile app access for this contact. Enabling requires the contact to have an email (400 otherwise).
+    // bool mobileAccessEnabled
+    test('to test the property `mobileAccessEnabled`', () async {
+      // TODO
+    });
+
   });
 }

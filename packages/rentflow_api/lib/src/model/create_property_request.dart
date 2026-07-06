@@ -21,6 +21,9 @@ part 'create_property_request.g.dart';
 /// * [description] 
 /// * [address] 
 /// * [city] 
+/// * [apartmentNumber] 
+/// * [ownerType] 
+/// * [phone] 
 /// * [area] 
 /// * [livingArea] 
 /// * [rooms] 
@@ -31,6 +34,7 @@ part 'create_property_request.g.dart';
 /// * [renovation] 
 /// * [bathroom] 
 /// * [bathroomCount] 
+/// * [housingType] 
 /// * [balcony] 
 /// * [loggia] 
 /// * [wardrobe] 
@@ -73,6 +77,16 @@ abstract class CreatePropertyRequest implements Built<CreatePropertyRequest, Cre
   @BuiltValueField(wireName: r'city')
   String get city;
 
+  @BuiltValueField(wireName: r'apartmentNumber')
+  String? get apartmentNumber;
+
+  @BuiltValueField(wireName: r'ownerType')
+  CreatePropertyRequestOwnerTypeEnum? get ownerType;
+  // enum ownerTypeEnum {  OWNER,  AGENT,  };
+
+  @BuiltValueField(wireName: r'phone')
+  String? get phone;
+
   @BuiltValueField(wireName: r'area')
   String? get area;
 
@@ -105,6 +119,10 @@ abstract class CreatePropertyRequest implements Built<CreatePropertyRequest, Cre
 
   @BuiltValueField(wireName: r'bathroomCount')
   num? get bathroomCount;
+
+  @BuiltValueField(wireName: r'housingType')
+  CreatePropertyRequestHousingTypeEnum? get housingType;
+  // enum housingTypeEnum {  APARTMENT,  APARTMENTS,  };
 
   @BuiltValueField(wireName: r'balcony')
   bool? get balcony;
@@ -232,6 +250,27 @@ class _$CreatePropertyRequestSerializer implements PrimitiveSerializer<CreatePro
       object.city,
       specifiedType: const FullType(String),
     );
+    if (object.apartmentNumber != null) {
+      yield r'apartmentNumber';
+      yield serializers.serialize(
+        object.apartmentNumber,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.ownerType != null) {
+      yield r'ownerType';
+      yield serializers.serialize(
+        object.ownerType,
+        specifiedType: const FullType(CreatePropertyRequestOwnerTypeEnum),
+      );
+    }
+    if (object.phone != null) {
+      yield r'phone';
+      yield serializers.serialize(
+        object.phone,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.area != null) {
       yield r'area';
       yield serializers.serialize(
@@ -300,6 +339,13 @@ class _$CreatePropertyRequestSerializer implements PrimitiveSerializer<CreatePro
       yield serializers.serialize(
         object.bathroomCount,
         specifiedType: const FullType(num),
+      );
+    }
+    if (object.housingType != null) {
+      yield r'housingType';
+      yield serializers.serialize(
+        object.housingType,
+        specifiedType: const FullType(CreatePropertyRequestHousingTypeEnum),
       );
     }
     if (object.balcony != null) {
@@ -528,6 +574,27 @@ class _$CreatePropertyRequestSerializer implements PrimitiveSerializer<CreatePro
           ) as String;
           result.city = valueDes;
           break;
+        case r'apartmentNumber':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.apartmentNumber = valueDes;
+          break;
+        case r'ownerType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CreatePropertyRequestOwnerTypeEnum),
+          ) as CreatePropertyRequestOwnerTypeEnum;
+          result.ownerType = valueDes;
+          break;
+        case r'phone':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.phone = valueDes;
+          break;
         case r'area':
           final valueDes = serializers.deserialize(
             value,
@@ -597,6 +664,13 @@ class _$CreatePropertyRequestSerializer implements PrimitiveSerializer<CreatePro
             specifiedType: const FullType(num),
           ) as num;
           result.bathroomCount = valueDes;
+          break;
+        case r'housingType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(CreatePropertyRequestHousingTypeEnum),
+          ) as CreatePropertyRequestHousingTypeEnum;
+          result.housingType = valueDes;
           break;
         case r'balcony':
           final valueDes = serializers.deserialize(
@@ -816,6 +890,21 @@ class CreatePropertyRequestTypeEnum extends EnumClass {
   static CreatePropertyRequestTypeEnum valueOf(String name) => _$createPropertyRequestTypeEnumValueOf(name);
 }
 
+class CreatePropertyRequestOwnerTypeEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'OWNER')
+  static const CreatePropertyRequestOwnerTypeEnum OWNER = _$createPropertyRequestOwnerTypeEnum_OWNER;
+  @BuiltValueEnumConst(wireName: r'AGENT')
+  static const CreatePropertyRequestOwnerTypeEnum AGENT = _$createPropertyRequestOwnerTypeEnum_AGENT;
+
+  static Serializer<CreatePropertyRequestOwnerTypeEnum> get serializer => _$createPropertyRequestOwnerTypeEnumSerializer;
+
+  const CreatePropertyRequestOwnerTypeEnum._(String name): super(name);
+
+  static BuiltSet<CreatePropertyRequestOwnerTypeEnum> get values => _$createPropertyRequestOwnerTypeEnumValues;
+  static CreatePropertyRequestOwnerTypeEnum valueOf(String name) => _$createPropertyRequestOwnerTypeEnumValueOf(name);
+}
+
 class CreatePropertyRequestBuildingTypeEnum extends EnumClass {
 
   @BuiltValueEnumConst(wireName: r'BRICK')
@@ -873,5 +962,20 @@ class CreatePropertyRequestBathroomEnum extends EnumClass {
 
   static BuiltSet<CreatePropertyRequestBathroomEnum> get values => _$createPropertyRequestBathroomEnumValues;
   static CreatePropertyRequestBathroomEnum valueOf(String name) => _$createPropertyRequestBathroomEnumValueOf(name);
+}
+
+class CreatePropertyRequestHousingTypeEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'APARTMENT')
+  static const CreatePropertyRequestHousingTypeEnum APARTMENT = _$createPropertyRequestHousingTypeEnum_APARTMENT;
+  @BuiltValueEnumConst(wireName: r'APARTMENTS')
+  static const CreatePropertyRequestHousingTypeEnum APARTMENTS = _$createPropertyRequestHousingTypeEnum_APARTMENTS;
+
+  static Serializer<CreatePropertyRequestHousingTypeEnum> get serializer => _$createPropertyRequestHousingTypeEnumSerializer;
+
+  const CreatePropertyRequestHousingTypeEnum._(String name): super(name);
+
+  static BuiltSet<CreatePropertyRequestHousingTypeEnum> get values => _$createPropertyRequestHousingTypeEnumValues;
+  static CreatePropertyRequestHousingTypeEnum valueOf(String name) => _$createPropertyRequestHousingTypeEnumValueOf(name);
 }
 

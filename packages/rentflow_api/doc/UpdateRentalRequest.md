@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **startDate** | **String** |  | [optional] 
 **endDate** | **String** |  | [optional] 
 **rentAmount** | **String** |  | [optional] 
+**currency** | **String** |  | [optional] 
 **period** | **String** |  | [optional] 
 **vatPercent** | **String** |  | [optional] 
 **depositAmount** | **String** |  | [optional] 

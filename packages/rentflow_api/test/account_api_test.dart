@@ -7,6 +7,15 @@ void main() {
   final instance = RentflowApi().getAccountApi();
 
   group(AccountApi, () {
+    // Assign property to sub-account
+    //
+    // Grants a sub-account access to a property owned by the current account. Idempotent.
+    //
+    //Future accountControllerAssignSubAccountProperty(String id, AssignSubAccountPropertyRequest assignSubAccountPropertyRequest) async
+    test('test accountControllerAssignSubAccountProperty', () async {
+      // TODO
+    });
+
     // Confirm email change
     //
     // Verifies confirmation code and updates user email address.
@@ -41,7 +50,7 @@ void main() {
 
     // Get account by id
     //
-    // Returns the Account aggregate by id.
+    // Returns the caller own Account aggregate.
     //
     //Future accountControllerGetAccount(String id) async
     test('test accountControllerGetAccount', () async {
@@ -95,6 +104,15 @@ void main() {
     //
     //Future accountControllerListSubAccounts() async
     test('test accountControllerListSubAccounts', () async {
+      // TODO
+    });
+
+    // Unassign property from sub-account
+    //
+    // Revokes a sub-account access to a property. Missing assignment is a no-op.
+    //
+    //Future accountControllerUnassignSubAccountProperty(String id, String propertyId) async
+    test('test accountControllerUnassignSubAccountProperty', () async {
       // TODO
     });
 

@@ -13,6 +13,9 @@ Name | Type | Description | Notes
 **description** | **String** |  | [optional] 
 **address** | **String** |  | 
 **city** | **String** |  | 
+**apartmentNumber** | **String** |  | [optional] 
+**ownerType** | **String** |  | [optional] 
+**phone** | **String** |  | [optional] 
 **area** | **String** |  | [optional] 
 **livingArea** | **String** |  | [optional] 
 **rooms** | **num** |  | [optional] 
@@ -23,6 +26,7 @@ Name | Type | Description | Notes
 **renovation** | **String** |  | [optional] 
 **bathroom** | **String** |  | [optional] 
 **bathroomCount** | **num** |  | [optional] 
+**housingType** | **String** |  | [optional] 
 **balcony** | **bool** |  | [optional] 
 **loggia** | **bool** |  | [optional] 
 **wardrobe** | **bool** |  | [optional] 

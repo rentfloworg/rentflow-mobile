@@ -45,6 +45,32 @@ final BuiltSet<UpdatePropertyRequestTypeEnum>
   _$updatePropertyRequestTypeEnum_LAND,
 ]);
 
+const UpdatePropertyRequestOwnerTypeEnum
+    _$updatePropertyRequestOwnerTypeEnum_OWNER =
+    const UpdatePropertyRequestOwnerTypeEnum._('OWNER');
+const UpdatePropertyRequestOwnerTypeEnum
+    _$updatePropertyRequestOwnerTypeEnum_AGENT =
+    const UpdatePropertyRequestOwnerTypeEnum._('AGENT');
+
+UpdatePropertyRequestOwnerTypeEnum _$updatePropertyRequestOwnerTypeEnumValueOf(
+    String name) {
+  switch (name) {
+    case 'OWNER':
+      return _$updatePropertyRequestOwnerTypeEnum_OWNER;
+    case 'AGENT':
+      return _$updatePropertyRequestOwnerTypeEnum_AGENT;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<UpdatePropertyRequestOwnerTypeEnum>
+    _$updatePropertyRequestOwnerTypeEnumValues = BuiltSet<
+        UpdatePropertyRequestOwnerTypeEnum>(const <UpdatePropertyRequestOwnerTypeEnum>[
+  _$updatePropertyRequestOwnerTypeEnum_OWNER,
+  _$updatePropertyRequestOwnerTypeEnum_AGENT,
+]);
+
 const UpdatePropertyRequestBuildingTypeEnum
     _$updatePropertyRequestBuildingTypeEnum_BRICK =
     const UpdatePropertyRequestBuildingTypeEnum._('BRICK');
@@ -165,9 +191,38 @@ final BuiltSet<UpdatePropertyRequestBathroomEnum>
   _$updatePropertyRequestBathroomEnum_SEVERAL,
 ]);
 
+const UpdatePropertyRequestHousingTypeEnum
+    _$updatePropertyRequestHousingTypeEnum_APARTMENT =
+    const UpdatePropertyRequestHousingTypeEnum._('APARTMENT');
+const UpdatePropertyRequestHousingTypeEnum
+    _$updatePropertyRequestHousingTypeEnum_APARTMENTS =
+    const UpdatePropertyRequestHousingTypeEnum._('APARTMENTS');
+
+UpdatePropertyRequestHousingTypeEnum
+    _$updatePropertyRequestHousingTypeEnumValueOf(String name) {
+  switch (name) {
+    case 'APARTMENT':
+      return _$updatePropertyRequestHousingTypeEnum_APARTMENT;
+    case 'APARTMENTS':
+      return _$updatePropertyRequestHousingTypeEnum_APARTMENTS;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<UpdatePropertyRequestHousingTypeEnum>
+    _$updatePropertyRequestHousingTypeEnumValues = BuiltSet<
+        UpdatePropertyRequestHousingTypeEnum>(const <UpdatePropertyRequestHousingTypeEnum>[
+  _$updatePropertyRequestHousingTypeEnum_APARTMENT,
+  _$updatePropertyRequestHousingTypeEnum_APARTMENTS,
+]);
+
 Serializer<UpdatePropertyRequestTypeEnum>
     _$updatePropertyRequestTypeEnumSerializer =
     _$UpdatePropertyRequestTypeEnumSerializer();
+Serializer<UpdatePropertyRequestOwnerTypeEnum>
+    _$updatePropertyRequestOwnerTypeEnumSerializer =
+    _$UpdatePropertyRequestOwnerTypeEnumSerializer();
 Serializer<UpdatePropertyRequestBuildingTypeEnum>
     _$updatePropertyRequestBuildingTypeEnumSerializer =
     _$UpdatePropertyRequestBuildingTypeEnumSerializer();
@@ -177,6 +232,9 @@ Serializer<UpdatePropertyRequestRenovationEnum>
 Serializer<UpdatePropertyRequestBathroomEnum>
     _$updatePropertyRequestBathroomEnumSerializer =
     _$UpdatePropertyRequestBathroomEnumSerializer();
+Serializer<UpdatePropertyRequestHousingTypeEnum>
+    _$updatePropertyRequestHousingTypeEnumSerializer =
+    _$UpdatePropertyRequestHousingTypeEnumSerializer();
 
 class _$UpdatePropertyRequestTypeEnumSerializer
     implements PrimitiveSerializer<UpdatePropertyRequestTypeEnum> {
@@ -211,6 +269,36 @@ class _$UpdatePropertyRequestTypeEnumSerializer
           Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
       UpdatePropertyRequestTypeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
+class _$UpdatePropertyRequestOwnerTypeEnumSerializer
+    implements PrimitiveSerializer<UpdatePropertyRequestOwnerTypeEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'OWNER': 'OWNER',
+    'AGENT': 'AGENT',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'OWNER': 'OWNER',
+    'AGENT': 'AGENT',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[UpdatePropertyRequestOwnerTypeEnum];
+  @override
+  final String wireName = 'UpdatePropertyRequestOwnerTypeEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, UpdatePropertyRequestOwnerTypeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  UpdatePropertyRequestOwnerTypeEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdatePropertyRequestOwnerTypeEnum.valueOf(
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
@@ -322,6 +410,38 @@ class _$UpdatePropertyRequestBathroomEnumSerializer
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
+class _$UpdatePropertyRequestHousingTypeEnumSerializer
+    implements PrimitiveSerializer<UpdatePropertyRequestHousingTypeEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'APARTMENT': 'APARTMENT',
+    'APARTMENTS': 'APARTMENTS',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'APARTMENT': 'APARTMENT',
+    'APARTMENTS': 'APARTMENTS',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[
+    UpdatePropertyRequestHousingTypeEnum
+  ];
+  @override
+  final String wireName = 'UpdatePropertyRequestHousingTypeEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, UpdatePropertyRequestHousingTypeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  UpdatePropertyRequestHousingTypeEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdatePropertyRequestHousingTypeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
 class _$UpdatePropertyRequest extends UpdatePropertyRequest {
   @override
   final String? managerId;
@@ -333,6 +453,12 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
   final String? address;
   @override
   final String? city;
+  @override
+  final String? apartmentNumber;
+  @override
+  final UpdatePropertyRequestOwnerTypeEnum? ownerType;
+  @override
+  final String? phone;
   @override
   final String? area;
   @override
@@ -353,6 +479,8 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
   final UpdatePropertyRequestBathroomEnum? bathroom;
   @override
   final num? bathroomCount;
+  @override
+  final UpdatePropertyRequestHousingTypeEnum? housingType;
   @override
   final bool? balcony;
   @override
@@ -404,6 +532,9 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
       this.description,
       this.address,
       this.city,
+      this.apartmentNumber,
+      this.ownerType,
+      this.phone,
       this.area,
       this.livingArea,
       this.rooms,
@@ -414,6 +545,7 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
       this.renovation,
       this.bathroom,
       this.bathroomCount,
+      this.housingType,
       this.balcony,
       this.loggia,
       this.wardrobe,
@@ -453,6 +585,9 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
         description == other.description &&
         address == other.address &&
         city == other.city &&
+        apartmentNumber == other.apartmentNumber &&
+        ownerType == other.ownerType &&
+        phone == other.phone &&
         area == other.area &&
         livingArea == other.livingArea &&
         rooms == other.rooms &&
@@ -463,6 +598,7 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
         renovation == other.renovation &&
         bathroom == other.bathroom &&
         bathroomCount == other.bathroomCount &&
+        housingType == other.housingType &&
         balcony == other.balcony &&
         loggia == other.loggia &&
         wardrobe == other.wardrobe &&
@@ -493,6 +629,9 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
     _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jc(_$hash, address.hashCode);
     _$hash = $jc(_$hash, city.hashCode);
+    _$hash = $jc(_$hash, apartmentNumber.hashCode);
+    _$hash = $jc(_$hash, ownerType.hashCode);
+    _$hash = $jc(_$hash, phone.hashCode);
     _$hash = $jc(_$hash, area.hashCode);
     _$hash = $jc(_$hash, livingArea.hashCode);
     _$hash = $jc(_$hash, rooms.hashCode);
@@ -503,6 +642,7 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
     _$hash = $jc(_$hash, renovation.hashCode);
     _$hash = $jc(_$hash, bathroom.hashCode);
     _$hash = $jc(_$hash, bathroomCount.hashCode);
+    _$hash = $jc(_$hash, housingType.hashCode);
     _$hash = $jc(_$hash, balcony.hashCode);
     _$hash = $jc(_$hash, loggia.hashCode);
     _$hash = $jc(_$hash, wardrobe.hashCode);
@@ -535,6 +675,9 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
           ..add('description', description)
           ..add('address', address)
           ..add('city', city)
+          ..add('apartmentNumber', apartmentNumber)
+          ..add('ownerType', ownerType)
+          ..add('phone', phone)
           ..add('area', area)
           ..add('livingArea', livingArea)
           ..add('rooms', rooms)
@@ -545,6 +688,7 @@ class _$UpdatePropertyRequest extends UpdatePropertyRequest {
           ..add('renovation', renovation)
           ..add('bathroom', bathroom)
           ..add('bathroomCount', bathroomCount)
+          ..add('housingType', housingType)
           ..add('balcony', balcony)
           ..add('loggia', loggia)
           ..add('wardrobe', wardrobe)
@@ -593,6 +737,20 @@ class UpdatePropertyRequestBuilder
   String? get city => _$this._city;
   set city(String? city) => _$this._city = city;
 
+  String? _apartmentNumber;
+  String? get apartmentNumber => _$this._apartmentNumber;
+  set apartmentNumber(String? apartmentNumber) =>
+      _$this._apartmentNumber = apartmentNumber;
+
+  UpdatePropertyRequestOwnerTypeEnum? _ownerType;
+  UpdatePropertyRequestOwnerTypeEnum? get ownerType => _$this._ownerType;
+  set ownerType(UpdatePropertyRequestOwnerTypeEnum? ownerType) =>
+      _$this._ownerType = ownerType;
+
+  String? _phone;
+  String? get phone => _$this._phone;
+  set phone(String? phone) => _$this._phone = phone;
+
   String? _area;
   String? get area => _$this._area;
   set area(String? area) => _$this._area = area;
@@ -637,6 +795,11 @@ class UpdatePropertyRequestBuilder
   num? get bathroomCount => _$this._bathroomCount;
   set bathroomCount(num? bathroomCount) =>
       _$this._bathroomCount = bathroomCount;
+
+  UpdatePropertyRequestHousingTypeEnum? _housingType;
+  UpdatePropertyRequestHousingTypeEnum? get housingType => _$this._housingType;
+  set housingType(UpdatePropertyRequestHousingTypeEnum? housingType) =>
+      _$this._housingType = housingType;
 
   bool? _balcony;
   bool? get balcony => _$this._balcony;
@@ -739,6 +902,9 @@ class UpdatePropertyRequestBuilder
       _description = $v.description;
       _address = $v.address;
       _city = $v.city;
+      _apartmentNumber = $v.apartmentNumber;
+      _ownerType = $v.ownerType;
+      _phone = $v.phone;
       _area = $v.area;
       _livingArea = $v.livingArea;
       _rooms = $v.rooms;
@@ -749,6 +915,7 @@ class UpdatePropertyRequestBuilder
       _renovation = $v.renovation;
       _bathroom = $v.bathroom;
       _bathroomCount = $v.bathroomCount;
+      _housingType = $v.housingType;
       _balcony = $v.balcony;
       _loggia = $v.loggia;
       _wardrobe = $v.wardrobe;
@@ -797,6 +964,9 @@ class UpdatePropertyRequestBuilder
             description: description,
             address: address,
             city: city,
+            apartmentNumber: apartmentNumber,
+            ownerType: ownerType,
+            phone: phone,
             area: area,
             livingArea: livingArea,
             rooms: rooms,
@@ -807,6 +977,7 @@ class UpdatePropertyRequestBuilder
             renovation: renovation,
             bathroom: bathroom,
             bathroomCount: bathroomCount,
+            housingType: housingType,
             balcony: balcony,
             loggia: loggia,
             wardrobe: wardrobe,

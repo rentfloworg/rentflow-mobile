@@ -22,6 +22,16 @@ void main() {
       // TODO
     });
 
+    // String ownerType
+    test('to test the property `ownerType`', () async {
+      // TODO
+    });
+
+    // String phone
+    test('to test the property `phone`', () async {
+      // TODO
+    });
+
     // String status
     test('to test the property `status`', () async {
       // TODO
@@ -29,6 +39,11 @@ void main() {
 
     // String type
     test('to test the property `type`', () async {
+      // TODO
+    });
+
+    // String housingType
+    test('to test the property `housingType`', () async {
       // TODO
     });
 
@@ -49,6 +64,11 @@ void main() {
 
     // String cadastralNumber
     test('to test the property `cadastralNumber`', () async {
+      // TODO
+    });
+
+    // String apartmentNumber
+    test('to test the property `apartmentNumber`', () async {
       // TODO
     });
 

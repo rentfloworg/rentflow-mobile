@@ -15,6 +15,9 @@ import 'package:rentflow_api/src/date_serializer.dart';
 import 'package:rentflow_api/src/model/date.dart';
 
 import 'package:rentflow_api/src/model/add_image_request.dart';
+import 'package:rentflow_api/src/model/assign_sub_account_property_request.dart';
+import 'package:rentflow_api/src/model/build_job_response.dart';
+import 'package:rentflow_api/src/model/build_profile_response.dart';
 import 'package:rentflow_api/src/model/client_flow_metrics_response.dart';
 import 'package:rentflow_api/src/model/complete_avito_oauth_request.dart';
 import 'package:rentflow_api/src/model/complete_import_request.dart';
@@ -24,6 +27,7 @@ import 'package:rentflow_api/src/model/connect_platform_request.dart';
 import 'package:rentflow_api/src/model/connection_response.dart';
 import 'package:rentflow_api/src/model/create_additional_service_request.dart';
 import 'package:rentflow_api/src/model/create_authorization_request.dart';
+import 'package:rentflow_api/src/model/create_build_profile_request.dart';
 import 'package:rentflow_api/src/model/create_contact_note_request.dart';
 import 'package:rentflow_api/src/model/create_contact_request.dart';
 import 'package:rentflow_api/src/model/create_deal_meeting_request.dart';
@@ -47,11 +51,13 @@ import 'package:rentflow_api/src/model/dashboard_event_response.dart';
 import 'package:rentflow_api/src/model/document_response.dart';
 import 'package:rentflow_api/src/model/document_signature_response.dart';
 import 'package:rentflow_api/src/model/document_template_response.dart';
+import 'package:rentflow_api/src/model/enqueue_build_request.dart';
 import 'package:rentflow_api/src/model/exchange_token_request.dart';
 import 'package:rentflow_api/src/model/external_listing_response.dart';
 import 'package:rentflow_api/src/model/finance_metrics_response.dart';
 import 'package:rentflow_api/src/model/generate_document_upload_url_request.dart';
 import 'package:rentflow_api/src/model/generate_document_upload_url_response.dart';
+import 'package:rentflow_api/src/model/generate_logo_upload_url_request.dart';
 import 'package:rentflow_api/src/model/generate_upload_url_body_dto.dart';
 import 'package:rentflow_api/src/model/get_me_response.dart';
 import 'package:rentflow_api/src/model/health_response.dart';
@@ -63,6 +69,8 @@ import 'package:rentflow_api/src/model/invite_sub_account_request.dart';
 import 'package:rentflow_api/src/model/invoice_item_input_dto.dart';
 import 'package:rentflow_api/src/model/invoice_item_response.dart';
 import 'package:rentflow_api/src/model/invoice_response.dart';
+import 'package:rentflow_api/src/model/list_build_jobs_response.dart';
+import 'package:rentflow_api/src/model/list_build_profiles_response.dart';
 import 'package:rentflow_api/src/model/list_dashboard_events_response.dart';
 import 'package:rentflow_api/src/model/list_documents_response.dart';
 import 'package:rentflow_api/src/model/list_invoices_response.dart';
@@ -74,6 +82,7 @@ import 'package:rentflow_api/src/model/list_template_history_response.dart';
 import 'package:rentflow_api/src/model/list_template_versions_response.dart';
 import 'package:rentflow_api/src/model/list_templates_response.dart';
 import 'package:rentflow_api/src/model/list_transactions_response.dart';
+import 'package:rentflow_api/src/model/logo_upload_url_response.dart';
 import 'package:rentflow_api/src/model/mark_deal_message_read_request.dart';
 import 'package:rentflow_api/src/model/patch_user_request.dart';
 import 'package:rentflow_api/src/model/property_additional_service_input_dto.dart';
@@ -88,6 +97,7 @@ import 'package:rentflow_api/src/model/property_utility_input_dto.dart';
 import 'package:rentflow_api/src/model/property_utility_response.dart';
 import 'package:rentflow_api/src/model/publication_import_response_dto.dart';
 import 'package:rentflow_api/src/model/publish_listing_request.dart';
+import 'package:rentflow_api/src/model/refresh_request.dart';
 import 'package:rentflow_api/src/model/rental_response.dart';
 import 'package:rentflow_api/src/model/reorder_images_request.dart';
 import 'package:rentflow_api/src/model/send_otp_request.dart';
@@ -100,9 +110,18 @@ import 'package:rentflow_api/src/model/template_block_input_dto.dart';
 import 'package:rentflow_api/src/model/template_block_response.dart';
 import 'package:rentflow_api/src/model/template_history_entry_response.dart';
 import 'package:rentflow_api/src/model/template_version_response.dart';
+import 'package:rentflow_api/src/model/tenant_document_response.dart';
+import 'package:rentflow_api/src/model/tenant_documents_response.dart';
+import 'package:rentflow_api/src/model/tenant_invoice_response.dart';
+import 'package:rentflow_api/src/model/tenant_invoices_response.dart';
+import 'package:rentflow_api/src/model/tenant_landlord_response.dart';
+import 'package:rentflow_api/src/model/tenant_overview_response.dart';
+import 'package:rentflow_api/src/model/tenant_property_response.dart';
+import 'package:rentflow_api/src/model/tenant_rental_response.dart';
 import 'package:rentflow_api/src/model/transaction_response.dart';
 import 'package:rentflow_api/src/model/update_account_type_request.dart';
 import 'package:rentflow_api/src/model/update_additional_service_request.dart';
+import 'package:rentflow_api/src/model/update_build_profile_request.dart';
 import 'package:rentflow_api/src/model/update_contact_request.dart';
 import 'package:rentflow_api/src/model/update_contact_status_request.dart';
 import 'package:rentflow_api/src/model/update_deal_meeting_request.dart';
@@ -113,6 +132,7 @@ import 'package:rentflow_api/src/model/update_deal_task_request.dart';
 import 'package:rentflow_api/src/model/update_document_request.dart';
 import 'package:rentflow_api/src/model/update_document_status_request.dart';
 import 'package:rentflow_api/src/model/update_invoice_request.dart';
+import 'package:rentflow_api/src/model/update_job_status_request.dart';
 import 'package:rentflow_api/src/model/update_property_request.dart';
 import 'package:rentflow_api/src/model/update_property_status_request.dart';
 import 'package:rentflow_api/src/model/update_rental_request.dart';
@@ -133,6 +153,9 @@ part 'serializers.g.dart';
 
 @SerializersFor([
   AddImageRequest,
+  AssignSubAccountPropertyRequest,
+  BuildJobResponse,
+  BuildProfileResponse,
   ClientFlowMetricsResponse,
   CompleteAvitoOauthRequest,
   CompleteImportRequest,
@@ -142,6 +165,7 @@ part 'serializers.g.dart';
   ConnectionResponse,
   CreateAdditionalServiceRequest,
   CreateAuthorizationRequest,
+  CreateBuildProfileRequest,
   CreateContactNoteRequest,
   CreateContactRequest,
   CreateDealMeetingRequest,
@@ -165,11 +189,13 @@ part 'serializers.g.dart';
   DocumentResponse,
   DocumentSignatureResponse,
   DocumentTemplateResponse,
+  EnqueueBuildRequest,
   ExchangeTokenRequest,
   ExternalListingResponse,
   FinanceMetricsResponse,
   GenerateDocumentUploadUrlRequest,
   GenerateDocumentUploadUrlResponse,
+  GenerateLogoUploadUrlRequest,
   GenerateUploadUrlBodyDto,
   GetMeResponse,
   HealthResponse,
@@ -181,6 +207,8 @@ part 'serializers.g.dart';
   InvoiceItemInputDto,
   InvoiceItemResponse,
   InvoiceResponse,
+  ListBuildJobsResponse,
+  ListBuildProfilesResponse,
   ListDashboardEventsResponse,
   ListDocumentsResponse,
   ListInvoicesResponse,
@@ -192,6 +220,7 @@ part 'serializers.g.dart';
   ListTemplateVersionsResponse,
   ListTemplatesResponse,
   ListTransactionsResponse,
+  LogoUploadUrlResponse,
   MarkDealMessageReadRequest,
   PatchUserRequest,
   PropertyAdditionalServiceInputDto,
@@ -206,6 +235,7 @@ part 'serializers.g.dart';
   PropertyUtilityResponse,
   PublicationImportResponseDto,
   PublishListingRequest,
+  RefreshRequest,
   RentalResponse,
   ReorderImagesRequest,
   SendOtpRequest,
@@ -218,9 +248,18 @@ part 'serializers.g.dart';
   TemplateBlockResponse,
   TemplateHistoryEntryResponse,
   TemplateVersionResponse,
+  TenantDocumentResponse,
+  TenantDocumentsResponse,
+  TenantInvoiceResponse,
+  TenantInvoicesResponse,
+  TenantLandlordResponse,
+  TenantOverviewResponse,
+  TenantPropertyResponse,
+  TenantRentalResponse,
   TransactionResponse,
   UpdateAccountTypeRequest,
   UpdateAdditionalServiceRequest,
+  UpdateBuildProfileRequest,
   UpdateContactRequest,
   UpdateContactStatusRequest,
   UpdateDealMeetingRequest,
@@ -231,6 +270,7 @@ part 'serializers.g.dart';
   UpdateDocumentRequest,
   UpdateDocumentStatusRequest,
   UpdateInvoiceRequest,
+  UpdateJobStatusRequest,
   UpdatePropertyRequest,
   UpdatePropertyStatusRequest,
   UpdateRentalRequest,

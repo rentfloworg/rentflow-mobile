@@ -48,12 +48,13 @@ import 'package:rentflow_api/rentflow_api.dart';
 
 
 final api = RentflowApi().getAccountApi();
-final ConfirmEmailChangeRequest confirmEmailChangeRequest = ; // ConfirmEmailChangeRequest | 
+final String id = id_example; // String | 
+final AssignSubAccountPropertyRequest assignSubAccountPropertyRequest = ; // AssignSubAccountPropertyRequest | 
 
 try {
-    api.accountControllerConfirmEmailChange(confirmEmailChangeRequest);
+    api.accountControllerAssignSubAccountProperty(id, assignSubAccountPropertyRequest);
 } catch on DioException (e) {
-    print("Exception when calling AccountApi->accountControllerConfirmEmailChange: $e\n");
+    print("Exception when calling AccountApi->accountControllerAssignSubAccountProperty: $e\n");
 }
 
 ```
@@ -64,6 +65,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AccountApi*](doc/AccountApi.md) | [**accountControllerAssignSubAccountProperty**](doc/AccountApi.md#accountcontrollerassignsubaccountproperty) | **POST** /account/sub-accounts/{id}/properties | Assign property to sub-account
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerConfirmEmailChange**](doc/AccountApi.md#accountcontrollerconfirmemailchange) | **POST** /account/email/confirm | Confirm email change
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerConfirmPhoneChange**](doc/AccountApi.md#accountcontrollerconfirmphonechange) | **POST** /account/phone/confirm | Confirm phone change
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerDeleteCompanyDocument**](doc/AccountApi.md#accountcontrollerdeletecompanydocument) | **DELETE** /account/documents/{id} | Delete company document
@@ -75,6 +77,7 @@ Class | Method | HTTP request | Description
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerInviteSubAccount**](doc/AccountApi.md#accountcontrollerinvitesubaccount) | **POST** /account/sub-accounts | Invite sub-account
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerListCompanyDocuments**](doc/AccountApi.md#accountcontrollerlistcompanydocuments) | **GET** /account/documents | List company documents
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerListSubAccounts**](doc/AccountApi.md#accountcontrollerlistsubaccounts) | **GET** /account/sub-accounts | List sub-accounts
+[*AccountApi*](doc/AccountApi.md) | [**accountControllerUnassignSubAccountProperty**](doc/AccountApi.md#accountcontrollerunassignsubaccountproperty) | **DELETE** /account/sub-accounts/{id}/properties/{propertyId} | Unassign property from sub-account
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerUpdateAccountType**](doc/AccountApi.md#accountcontrollerupdateaccounttype) | **PATCH** /account/type | Update account type
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerUpdateSubAccount**](doc/AccountApi.md#accountcontrollerupdatesubaccount) | **PATCH** /account/sub-accounts/{id} | Update sub-account (role/status)
 [*AccountApi*](doc/AccountApi.md) | [**accountControllerUpdateTelegram**](doc/AccountApi.md#accountcontrollerupdatetelegram) | **PUT** /account/telegram | Update telegram link
@@ -90,6 +93,17 @@ Class | Method | HTTP request | Description
 [*AuthApi*](doc/AuthApi.md) | [**authControllerTelegramInit**](doc/AuthApi.md#authcontrollertelegraminit) | **GET** /auth/telegram | 
 [*AuthApi*](doc/AuthApi.md) | [**authControllerTelegramVerify**](doc/AuthApi.md#authcontrollertelegramverify) | **POST** /auth/telegram/verify | 
 [*AuthApi*](doc/AuthApi.md) | [**authControllerVerifyOtp**](doc/AuthApi.md#authcontrollerverifyotp) | **POST** /auth/otp/verify | Verify otp code
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerCreateProfile**](doc/BuilderApi.md#buildercontrollercreateprofile) | **POST** /builder/profiles | Create build profile
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerDeleteProfile**](doc/BuilderApi.md#buildercontrollerdeleteprofile) | **DELETE** /builder/profiles/{id} | Deactivate build profile
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerEnqueueBuild**](doc/BuilderApi.md#buildercontrollerenqueuebuild) | **POST** /builder/profiles/{id}/builds | Enqueue a build for a profile
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerGenerateLogoUploadUrl**](doc/BuilderApi.md#buildercontrollergeneratelogouploadurl) | **POST** /builder/upload-url | Generate presigned upload URL for the app logo
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerGetJob**](doc/BuilderApi.md#buildercontrollergetjob) | **GET** /builder/jobs/{id} | Get build job by ID
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerGetProfile**](doc/BuilderApi.md#buildercontrollergetprofile) | **GET** /builder/profiles/{id} | Get build profile by ID
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerListProfileJobs**](doc/BuilderApi.md#buildercontrollerlistprofilejobs) | **GET** /builder/profiles/{id}/jobs | List build jobs of a profile
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerListProfiles**](doc/BuilderApi.md#buildercontrollerlistprofiles) | **GET** /builder/profiles | List build profiles
+[*BuilderApi*](doc/BuilderApi.md) | [**builderControllerUpdateProfile**](doc/BuilderApi.md#buildercontrollerupdateprofile) | **PATCH** /builder/profiles/{id} | Update build profile
+[*BuilderCIApi*](doc/BuilderCIApi.md) | [**builderCiControllerGetMaterializedProfile**](doc/BuilderCIApi.md#buildercicontrollergetmaterializedprofile) | **GET** /builder/ci/profiles/{slug}/materialized | Get materialized build profile for the conveyor
+[*BuilderCIApi*](doc/BuilderCIApi.md) | [**builderCiControllerUpdateJobStatus**](doc/BuilderCIApi.md#buildercicontrollerupdatejobstatus) | **PATCH** /builder/ci/jobs/{id}/status | Update build job status from CI
 [*CrmApi*](doc/CrmApi.md) | [**contactKycControllerGetContactKyc**](doc/CrmApi.md#contactkyccontrollergetcontactkyc) | **GET** /crm/contacts/{contactId}/kyc | Get contact KYC
 [*CrmApi*](doc/CrmApi.md) | [**contactKycControllerUpsertContactKyc**](doc/CrmApi.md#contactkyccontrollerupsertcontactkyc) | **PUT** /crm/contacts/{contactId}/kyc | Upsert contact KYC
 [*CrmApi*](doc/CrmApi.md) | [**contactNotesControllerCreateContactNote**](doc/CrmApi.md#contactnotescontrollercreatecontactnote) | **POST** /crm/contacts/{contactId}/notes | Create contact note
@@ -223,6 +237,10 @@ Class | Method | HTTP request | Description
 [*TasksApi*](doc/TasksApi.md) | [**tasksControllerListTaskResponsibles**](doc/TasksApi.md#taskscontrollerlisttaskresponsibles) | **GET** /tasks/responsibles | List task responsibles
 [*TasksApi*](doc/TasksApi.md) | [**tasksControllerListTasks**](doc/TasksApi.md#taskscontrollerlisttasks) | **GET** /tasks | List tasks
 [*TasksApi*](doc/TasksApi.md) | [**tasksControllerUpdateTask**](doc/TasksApi.md#taskscontrollerupdatetask) | **PATCH** /tasks/{id} | Update task
+[*TenantApi*](doc/TenantApi.md) | [**tenantControllerGetOverview**](doc/TenantApi.md#tenantcontrollergetoverview) | **GET** /tenant/overview | Tenant overview
+[*TenantApi*](doc/TenantApi.md) | [**tenantControllerListDocuments**](doc/TenantApi.md#tenantcontrollerlistdocuments) | **GET** /tenant/documents | Tenant documents
+[*TenantApi*](doc/TenantApi.md) | [**tenantControllerListInvoices**](doc/TenantApi.md#tenantcontrollerlistinvoices) | **GET** /tenant/invoices | Tenant invoices
+[*TenantApi*](doc/TenantApi.md) | [**tenantControllerSignDocument**](doc/TenantApi.md#tenantcontrollersigndocument) | **POST** /tenant/documents/{id}/sign | Sign a document as tenant
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerGetMe**](doc/UsersApi.md#userscontrollergetme) | **GET** /users/@me | Get current user profile
 [*UsersApi*](doc/UsersApi.md) | [**usersControllerPatchUser**](doc/UsersApi.md#userscontrollerpatchuser) | **PATCH** /users/@me | 
 
@@ -230,6 +248,9 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [AddImageRequest](doc/AddImageRequest.md)
+ - [AssignSubAccountPropertyRequest](doc/AssignSubAccountPropertyRequest.md)
+ - [BuildJobResponse](doc/BuildJobResponse.md)
+ - [BuildProfileResponse](doc/BuildProfileResponse.md)
  - [ClientFlowMetricsResponse](doc/ClientFlowMetricsResponse.md)
  - [CompleteAvitoOauthRequest](doc/CompleteAvitoOauthRequest.md)
  - [CompleteImportRequest](doc/CompleteImportRequest.md)
@@ -239,6 +260,7 @@ Class | Method | HTTP request | Description
  - [ConnectionResponse](doc/ConnectionResponse.md)
  - [CreateAdditionalServiceRequest](doc/CreateAdditionalServiceRequest.md)
  - [CreateAuthorizationRequest](doc/CreateAuthorizationRequest.md)
+ - [CreateBuildProfileRequest](doc/CreateBuildProfileRequest.md)
  - [CreateContactNoteRequest](doc/CreateContactNoteRequest.md)
  - [CreateContactRequest](doc/CreateContactRequest.md)
  - [CreateDealMeetingRequest](doc/CreateDealMeetingRequest.md)
@@ -262,11 +284,13 @@ Class | Method | HTTP request | Description
  - [DocumentResponse](doc/DocumentResponse.md)
  - [DocumentSignatureResponse](doc/DocumentSignatureResponse.md)
  - [DocumentTemplateResponse](doc/DocumentTemplateResponse.md)
+ - [EnqueueBuildRequest](doc/EnqueueBuildRequest.md)
  - [ExchangeTokenRequest](doc/ExchangeTokenRequest.md)
  - [ExternalListingResponse](doc/ExternalListingResponse.md)
  - [FinanceMetricsResponse](doc/FinanceMetricsResponse.md)
  - [GenerateDocumentUploadUrlRequest](doc/GenerateDocumentUploadUrlRequest.md)
  - [GenerateDocumentUploadUrlResponse](doc/GenerateDocumentUploadUrlResponse.md)
+ - [GenerateLogoUploadUrlRequest](doc/GenerateLogoUploadUrlRequest.md)
  - [GenerateUploadUrlBodyDto](doc/GenerateUploadUrlBodyDto.md)
  - [GetMeResponse](doc/GetMeResponse.md)
  - [HealthResponse](doc/HealthResponse.md)
@@ -278,6 +302,8 @@ Class | Method | HTTP request | Description
  - [InvoiceItemInputDto](doc/InvoiceItemInputDto.md)
  - [InvoiceItemResponse](doc/InvoiceItemResponse.md)
  - [InvoiceResponse](doc/InvoiceResponse.md)
+ - [ListBuildJobsResponse](doc/ListBuildJobsResponse.md)
+ - [ListBuildProfilesResponse](doc/ListBuildProfilesResponse.md)
  - [ListDashboardEventsResponse](doc/ListDashboardEventsResponse.md)
  - [ListDocumentsResponse](doc/ListDocumentsResponse.md)
  - [ListInvoicesResponse](doc/ListInvoicesResponse.md)
@@ -289,6 +315,7 @@ Class | Method | HTTP request | Description
  - [ListTemplateVersionsResponse](doc/ListTemplateVersionsResponse.md)
  - [ListTemplatesResponse](doc/ListTemplatesResponse.md)
  - [ListTransactionsResponse](doc/ListTransactionsResponse.md)
+ - [LogoUploadUrlResponse](doc/LogoUploadUrlResponse.md)
  - [MarkDealMessageReadRequest](doc/MarkDealMessageReadRequest.md)
  - [PatchUserRequest](doc/PatchUserRequest.md)
  - [PropertyAdditionalServiceInputDto](doc/PropertyAdditionalServiceInputDto.md)
@@ -303,6 +330,7 @@ Class | Method | HTTP request | Description
  - [PropertyUtilityResponse](doc/PropertyUtilityResponse.md)
  - [PublicationImportResponseDto](doc/PublicationImportResponseDto.md)
  - [PublishListingRequest](doc/PublishListingRequest.md)
+ - [RefreshRequest](doc/RefreshRequest.md)
  - [RentalResponse](doc/RentalResponse.md)
  - [ReorderImagesRequest](doc/ReorderImagesRequest.md)
  - [SendOtpRequest](doc/SendOtpRequest.md)
@@ -315,9 +343,18 @@ Class | Method | HTTP request | Description
  - [TemplateBlockResponse](doc/TemplateBlockResponse.md)
  - [TemplateHistoryEntryResponse](doc/TemplateHistoryEntryResponse.md)
  - [TemplateVersionResponse](doc/TemplateVersionResponse.md)
+ - [TenantDocumentResponse](doc/TenantDocumentResponse.md)
+ - [TenantDocumentsResponse](doc/TenantDocumentsResponse.md)
+ - [TenantInvoiceResponse](doc/TenantInvoiceResponse.md)
+ - [TenantInvoicesResponse](doc/TenantInvoicesResponse.md)
+ - [TenantLandlordResponse](doc/TenantLandlordResponse.md)
+ - [TenantOverviewResponse](doc/TenantOverviewResponse.md)
+ - [TenantPropertyResponse](doc/TenantPropertyResponse.md)
+ - [TenantRentalResponse](doc/TenantRentalResponse.md)
  - [TransactionResponse](doc/TransactionResponse.md)
  - [UpdateAccountTypeRequest](doc/UpdateAccountTypeRequest.md)
  - [UpdateAdditionalServiceRequest](doc/UpdateAdditionalServiceRequest.md)
+ - [UpdateBuildProfileRequest](doc/UpdateBuildProfileRequest.md)
  - [UpdateContactRequest](doc/UpdateContactRequest.md)
  - [UpdateContactStatusRequest](doc/UpdateContactStatusRequest.md)
  - [UpdateDealMeetingRequest](doc/UpdateDealMeetingRequest.md)
@@ -328,6 +365,7 @@ Class | Method | HTTP request | Description
  - [UpdateDocumentRequest](doc/UpdateDocumentRequest.md)
  - [UpdateDocumentStatusRequest](doc/UpdateDocumentStatusRequest.md)
  - [UpdateInvoiceRequest](doc/UpdateInvoiceRequest.md)
+ - [UpdateJobStatusRequest](doc/UpdateJobStatusRequest.md)
  - [UpdatePropertyRequest](doc/UpdatePropertyRequest.md)
  - [UpdatePropertyStatusRequest](doc/UpdatePropertyStatusRequest.md)
  - [UpdateRentalRequest](doc/UpdateRentalRequest.md)

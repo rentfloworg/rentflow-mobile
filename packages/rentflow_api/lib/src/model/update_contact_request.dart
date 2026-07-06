@@ -16,6 +16,7 @@ part 'update_contact_request.g.dart';
 /// * [email] 
 /// * [source_] 
 /// * [company] 
+/// * [mobileAccessEnabled] - Tenant mobile app access for this contact. Enabling requires the contact to have an email (400 otherwise).
 @BuiltValue()
 abstract class UpdateContactRequest implements Built<UpdateContactRequest, UpdateContactRequestBuilder> {
   @BuiltValueField(wireName: r'name')
@@ -32,6 +33,10 @@ abstract class UpdateContactRequest implements Built<UpdateContactRequest, Updat
 
   @BuiltValueField(wireName: r'company')
   String? get company;
+
+  /// Tenant mobile app access for this contact. Enabling requires the contact to have an email (400 otherwise).
+  @BuiltValueField(wireName: r'mobileAccessEnabled')
+  bool? get mobileAccessEnabled;
 
   UpdateContactRequest._();
 
@@ -91,6 +96,13 @@ class _$UpdateContactRequestSerializer implements PrimitiveSerializer<UpdateCont
         specifiedType: const FullType(String),
       );
     }
+    if (object.mobileAccessEnabled != null) {
+      yield r'mobileAccessEnabled';
+      yield serializers.serialize(
+        object.mobileAccessEnabled,
+        specifiedType: const FullType(bool),
+      );
+    }
   }
 
   @override
@@ -148,6 +160,13 @@ class _$UpdateContactRequestSerializer implements PrimitiveSerializer<UpdateCont
             specifiedType: const FullType(String),
           ) as String;
           result.company = valueDes;
+          break;
+        case r'mobileAccessEnabled':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.mobileAccessEnabled = valueDes;
           break;
         default:
           unhandled.add(key);

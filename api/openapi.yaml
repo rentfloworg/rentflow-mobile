@@ -55,8 +55,9 @@ paths:
   /auth/otp/verify:
     post:
       description: >-
-        Verifies the code sent to the user phone number or email and returns a
-        access token.
+        Verifies the code sent to the user phone number or email and returns the
+        token pair. Tokens are also set as httpOnly cookies for browser clients;
+        the body fields serve clients without cookie storage (mobile app).
       operationId: AuthController_verifyOtp
       parameters: []
       requestBody:
@@ -73,9 +74,18 @@ paths:
         - Auth
   /auth/refresh:
     post:
-      description: Renews access token using refresh token from cookies
+      description: >-
+        Renews the token pair using the refresh token from the httpOnly cookie
+        (OTP/SSO flow) or from the request body (OAuth PKCE flow storing tokens
+        in localStorage)
       operationId: AuthController_refresh
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
       responses:
         '200':
           description: ''
@@ -360,6 +370,57 @@ paths:
       summary: Delete sub-account
       tags:
         - Account
+  /account/sub-accounts/{id}/properties:
+    post:
+      description: >-
+        Grants a sub-account access to a property owned by the current account.
+        Idempotent.
+      operationId: AccountController_assignSubAccountProperty
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignSubAccountPropertyRequest'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Assign property to sub-account
+      tags:
+        - Account
+  /account/sub-accounts/{id}/properties/{propertyId}:
+    delete:
+      description: >-
+        Revokes a sub-account access to a property. Missing assignment is a
+        no-op.
+      operationId: AccountController_unassignSubAccountProperty
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: propertyId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Unassign property from sub-account
+      tags:
+        - Account
   /account/documents:
     get:
       operationId: AccountController_listCompanyDocuments
@@ -408,7 +469,7 @@ paths:
         - Account
   /account/{id}:
     get:
-      description: Returns the Account aggregate by id.
+      description: Returns the caller own Account aggregate.
       operationId: AccountController_getAccount
       parameters:
         - name: id
@@ -419,6 +480,8 @@ paths:
       responses:
         '200':
           description: ''
+      security:
+        - bearer: []
       summary: Get account by id
       tags:
         - Account
@@ -3941,6 +4004,397 @@ paths:
       summary: Submit a lead from a published studio visit card
       tags:
         - Studio
+  /builder/profiles:
+    post:
+      description: >-
+        Only consumer-facing fields are accepted; clientSlug, applicationId,
+        versions and the backend config are derived server-side and returned
+        read-only on the profile.
+      operationId: BuilderController_createProfile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBuildProfileRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildProfileResponse'
+      security:
+        - bearer: []
+      summary: Create build profile
+      tags:
+        - Builder
+    get:
+      operationId: BuilderController_listProfiles
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+        - name: includeInactive
+          required: false
+          in: query
+          schema:
+            default: false
+            example: false
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBuildProfilesResponse'
+      security:
+        - bearer: []
+      summary: List build profiles
+      tags:
+        - Builder
+  /builder/upload-url:
+    post:
+      description: >-
+        Returns a short-lived presigned PUT URL for direct upload from the
+        browser. After a successful PUT, put `publicUrl` into branding.logo.
+      operationId: BuilderController_generateLogoUploadUrl
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateLogoUploadUrlRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoUploadUrlResponse'
+      security:
+        - bearer: []
+      summary: Generate presigned upload URL for the app logo
+      tags:
+        - Builder
+  /builder/profiles/{id}:
+    get:
+      operationId: BuilderController_getProfile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildProfileResponse'
+      security:
+        - bearer: []
+      summary: Get build profile by ID
+      tags:
+        - Builder
+    patch:
+      operationId: BuilderController_updateProfile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBuildProfileRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildProfileResponse'
+      security:
+        - bearer: []
+      summary: Update build profile
+      tags:
+        - Builder
+    delete:
+      description: Soft delete — sets isActive to false.
+      operationId: BuilderController_deleteProfile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildProfileResponse'
+      security:
+        - bearer: []
+      summary: Deactivate build profile
+      tags:
+        - Builder
+  /builder/profiles/{id}/builds:
+    post:
+      description: Creates a QUEUED build job and dispatches it to the mobile CI conveyor.
+      operationId: BuilderController_enqueueBuild
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnqueueBuildRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildJobResponse'
+      security:
+        - bearer: []
+      summary: Enqueue a build for a profile
+      tags:
+        - Builder
+  /builder/profiles/{id}/jobs:
+    get:
+      operationId: BuilderController_listProfileJobs
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBuildJobsResponse'
+      security:
+        - bearer: []
+      summary: List build jobs of a profile
+      tags:
+        - Builder
+  /builder/jobs/{id}:
+    get:
+      operationId: BuilderController_getJob
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildJobResponse'
+      security:
+        - bearer: []
+      summary: Get build job by ID
+      tags:
+        - Builder
+  /builder/ci/profiles/{slug}/materialized:
+    get:
+      description: >-
+        Returns the client configuration the CI conveyor needs to produce a
+        white-label build, including decrypted RuStore publish credentials when
+        stored. When jobId is provided, versionName/versionCode are taken from
+        that job snapshot instead of the live profile.
+      operationId: BuilderCiController_getMaterializedProfile
+      parameters:
+        - name: x-builder-ci-token
+          in: header
+          description: CI shared secret (BUILDER_CI_TOKEN)
+          required: true
+          schema:
+            type: string
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: jobId
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      summary: Get materialized build profile for the conveyor
+      tags:
+        - Builder CI
+  /builder/ci/jobs/{id}/status:
+    patch:
+      description: >-
+        Called by the conveyor as the build progresses: BUILDING -> SIGNING ->
+        PUBLISHING -> DONE, or FAILED with an error message.
+      operationId: BuilderCiController_updateJobStatus
+      parameters:
+        - name: x-builder-ci-token
+          in: header
+          description: CI shared secret (BUILDER_CI_TOKEN)
+          required: true
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJobStatusRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildJobResponse'
+      summary: Update build job status from CI
+      tags:
+        - Builder CI
+  /tenant/overview:
+    get:
+      description: >-
+        Rentals of the current tenant (resolved by account email against CRM
+        contacts with mobile access enabled) with property summary and landlord
+        contact info. hasAccess=false with an empty list when the email matches
+        no enabled contact.
+      operationId: TenantController_getOverview
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantOverviewResponse'
+      security:
+        - bearer: []
+      summary: Tenant overview
+      tags:
+        - Tenant
+  /tenant/invoices:
+    get:
+      description: >-
+        All invoices across the tenant rentals, ordered by due date desc.
+        hasAccess=false with an empty list when the account has no tenant scope.
+      operationId: TenantController_listInvoices
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantInvoicesResponse'
+      security:
+        - bearer: []
+      summary: Tenant invoices
+      tags:
+        - Tenant
+  /tenant/documents:
+    get:
+      description: >-
+        Documents attached to the tenant rentals/contacts, split into toSign
+        (SENT, SIGNED_BY_ME) and archive (SIGNED_BY_TENANT, SIGNED_BY_BOTH).
+        Drafts are never exposed.
+      operationId: TenantController_listDocuments
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDocumentsResponse'
+      security:
+        - bearer: []
+      summary: Tenant documents
+      tags:
+        - Tenant
+  /tenant/documents/{id}/sign:
+    post:
+      description: >-
+        Creates an e-signature by the tenant contact that owns the document (via
+        its rental or contact binding) and advances the status: SENT →
+        SIGNED_BY_TENANT, SIGNED_BY_ME → SIGNED_BY_BOTH. 404 for documents
+        outside the tenant scope, 409 when already signed, 412 for non-signable
+        statuses.
+      operationId: TenantController_signDocument
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDocumentResponse'
+      security:
+        - bearer: []
+      summary: Sign a document as tenant
+      tags:
+        - Tenant
 info:
   title: RentFlow API
   description: API Gateway for RentFlow microservices
@@ -4001,6 +4455,15 @@ components:
         - identifier
         - code
         - type
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          description: >-
+            Refresh token for clients that store tokens in localStorage (OAuth
+            PKCE flow). Falls back to the refreshToken httpOnly cookie when
+            omitted.
     TelegramVerifyRequest:
       type: object
       properties:
@@ -4176,6 +4639,14 @@ components:
             - ACTIVE
             - INVITED
             - BLOCKED
+    AssignSubAccountPropertyRequest:
+      type: object
+      properties:
+        propertyId:
+          type: string
+          example: cmc3x1y2k0000abcd12345678
+      required:
+        - propertyId
     UploadCompanyDocumentRequest:
       type: object
       properties:
@@ -4439,10 +4910,19 @@ components:
         managerId:
           type: string
           example: X6KBMTnCDkbrPN_I0YXG8
+        ownerType:
+          type: string
+          example: OWNER
+        phone:
+          type: string
+          example: '+79991234567'
         status:
           type: string
           example: AVAILABLE
         type:
+          type: string
+          example: APARTMENT
+        housingType:
           type: string
           example: APARTMENT
         description:
@@ -4456,6 +4936,9 @@ components:
         cadastralNumber:
           type: string
           example: '47:14:0101001:123'
+        apartmentNumber:
+          type: string
+          example: '42'
         area:
           type: string
           example: '65.5'
@@ -4760,6 +5243,17 @@ components:
         city:
           type: string
           example: Moscow
+        apartmentNumber:
+          type: string
+          example: '42'
+        ownerType:
+          type: string
+          enum:
+            - OWNER
+            - AGENT
+        phone:
+          type: string
+          example: '+79991234567'
         area:
           type: string
           example: '65.5'
@@ -4803,6 +5297,11 @@ components:
         bathroomCount:
           type: number
           example: 2
+        housingType:
+          type: string
+          enum:
+            - APARTMENT
+            - APARTMENTS
         balcony:
           type: boolean
           example: false
@@ -4920,6 +5419,17 @@ components:
           type: string
         city:
           type: string
+        apartmentNumber:
+          type: string
+          example: '42'
+        ownerType:
+          type: string
+          enum:
+            - OWNER
+            - AGENT
+        phone:
+          type: string
+          example: '+79991234567'
         area:
           type: string
           example: '70.0'
@@ -4959,6 +5469,11 @@ components:
         bathroomCount:
           type: number
           example: 2
+        housingType:
+          type: string
+          enum:
+            - APARTMENT
+            - APARTMENTS
         balcony:
           type: boolean
         loggia:
@@ -5236,6 +5751,11 @@ components:
           type: string
         company:
           type: string
+        mobileAccessEnabled:
+          type: boolean
+          description: >-
+            Tenant mobile app access for this contact. Enabling requires the
+            contact to have an email (400 otherwise).
     UpdateContactStatusRequest:
       type: object
       properties:
@@ -5770,6 +6290,9 @@ components:
         rentAmount:
           type: string
           example: '55000.00'
+        currency:
+          type: string
+          example: RUB
         period:
           type: string
           enum:
@@ -6887,3 +7410,567 @@ components:
         - propertyId
         - name
         - phone
+    CreateBuildProfileRequest:
+      type: object
+      properties:
+        appName:
+          type: string
+          description: >-
+            App name shown to end users. clientSlug and applicationId are
+            derived from it server-side.
+          example: ACME Rentals
+          minLength: 2
+          maxLength: 30
+        branding:
+          type: object
+          description: >-
+            Colors / logo configuration. `logo` is either empty (default
+            RentFlow logo) or the public https URL returned by POST
+            /builder/upload-url.
+          example:
+            primaryColor: '#FF5500'
+            logo: https://cdn.example/builder-logos/acc1/logo.png
+        features:
+          type: object
+          example:
+            chat: true
+            payments: false
+        legal:
+          type: object
+          example:
+            privacyPolicyUrl: https://acme.example/privacy
+        storeMeta:
+          type: object
+          description: >-
+            Store listing texts. whatsNew and publishType get server-side
+            defaults when omitted.
+          example:
+            shortDescription: ACME rentals app
+        rustoreKeyId:
+          type: string
+          description: >-
+            RuStore key id for store publishing. Write-only — stored encrypted
+            and never returned.
+          writeOnly: true
+          example: '1234567890'
+        rustorePrivateKey:
+          type: string
+          description: >-
+            RuStore private key for store publishing. Write-only — stored
+            encrypted and never returned.
+          writeOnly: true
+      required:
+        - appName
+        - branding
+        - features
+    BuildProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cmf1x2y3z0000abcd1234efgh
+        clientSlug:
+          type: string
+          description: Derived from appName (read-only)
+          example: acme-rentals
+        displayName:
+          type: string
+          description: Mirrors appName (read-only)
+          example: ACME Rentals
+        appName:
+          type: string
+          example: ACME Rentals
+        applicationId:
+          type: string
+          description: Derived from the client slug (read-only)
+          example: ru.rentflow.client.acmerentals
+        versionName:
+          type: string
+          example: 1.0.0
+        versionCode:
+          type: number
+          description: Auto-bumped on every enqueued build
+          example: 3
+        branding:
+          type: object
+          example:
+            primaryColor: '#FF5500'
+        backend:
+          type: object
+          example:
+            apiBaseUrl: https://api.rentflow.tech
+        features:
+          type: object
+          example:
+            chat: true
+        legal:
+          type: object
+          nullable: true
+        storeMeta:
+          type: object
+          nullable: true
+        hasRustoreCredentials:
+          type: boolean
+          description: >-
+            Whether RuStore publish credentials are stored for this profile. The
+            credentials themselves are never returned.
+          example: false
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          example: '2026-07-05T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-07-05T12:00:00.000Z'
+      required:
+        - id
+        - clientSlug
+        - displayName
+        - appName
+        - applicationId
+        - versionName
+        - versionCode
+        - branding
+        - backend
+        - features
+        - hasRustoreCredentials
+        - isActive
+        - createdAt
+        - updatedAt
+    GenerateLogoUploadUrlRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          description: >-
+            MIME type of the logo image (validated server-side against an image
+            whitelist).
+          example: image/png
+        fileName:
+          type: string
+          example: logo.png
+      required:
+        - contentType
+    LogoUploadUrlResponse:
+      type: object
+      properties:
+        uploadUrl:
+          type: string
+          description: >-
+            Short-lived presigned PUT URL — upload the logo file directly to
+            this address.
+        publicUrl:
+          type: string
+          description: >-
+            Public URL of the uploaded logo — put it into branding.logo after a
+            successful PUT.
+      required:
+        - uploadUrl
+        - publicUrl
+    ListBuildProfilesResponse:
+      type: object
+      properties:
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildProfileResponse'
+        total:
+          type: number
+          example: 1
+      required:
+        - profiles
+        - total
+    UpdateBuildProfileRequest:
+      type: object
+      properties:
+        appName:
+          type: string
+          example: ACME Rentals
+          minLength: 2
+          maxLength: 30
+        branding:
+          type: object
+          example:
+            primaryColor: '#FF5500'
+            logo: https://cdn.example/builder-logos/acc1/logo.png
+        features:
+          type: object
+          example:
+            chat: true
+            payments: false
+        legal:
+          type: object
+          example:
+            privacyPolicyUrl: https://acme.example/privacy
+        storeMeta:
+          type: object
+          example:
+            shortDescription: ACME rentals app
+        isActive:
+          type: boolean
+          example: true
+        rustoreKeyId:
+          type: string
+          description: >-
+            RuStore key id for store publishing. Write-only — stored encrypted
+            and never returned. Pass an empty string to clear.
+          writeOnly: true
+          example: '1234567890'
+        rustorePrivateKey:
+          type: string
+          description: >-
+            RuStore private key for store publishing. Write-only — stored
+            encrypted and never returned. Pass an empty string to clear.
+          writeOnly: true
+    EnqueueBuildRequest:
+      type: object
+      properties:
+        publish:
+          type: boolean
+          description: >-
+            Publish the produced build to RuStore after signing (requires stored
+            RuStore credentials on the profile)
+          default: false
+          example: false
+    BuildJobResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cmf1x2y3z0000abcd1234efgh
+        profileId:
+          type: string
+          example: cmf1x2y3z0000abcd1234efgh
+        status:
+          type: string
+          enum:
+            - QUEUED
+            - BUILDING
+            - SIGNING
+            - PUBLISHING
+            - DONE
+            - FAILED
+        versionName:
+          type: string
+          example: 1.0.0
+        versionCode:
+          type: number
+          example: 3
+        requestedBy:
+          type: object
+          nullable: true
+          example: X6KBMTnCDkbrPN_I0YXG8
+        artifactUrl:
+          type: object
+          nullable: true
+        error:
+          type: object
+          nullable: true
+        rustoreVersionId:
+          type: object
+          nullable: true
+        startedAt:
+          type: object
+          nullable: true
+        finishedAt:
+          type: object
+          nullable: true
+        createdAt:
+          type: string
+          example: '2026-07-05T12:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2026-07-05T12:00:00.000Z'
+      required:
+        - id
+        - profileId
+        - status
+        - versionName
+        - versionCode
+        - createdAt
+        - updatedAt
+    ListBuildJobsResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildJobResponse'
+        total:
+          type: number
+          example: 1
+      required:
+        - jobs
+        - total
+    UpdateJobStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - QUEUED
+            - BUILDING
+            - SIGNING
+            - PUBLISHING
+            - DONE
+            - FAILED
+        artifactUrl:
+          type: string
+          example: https://storage.example/builds/acme-1.0.0-42.aab
+        error:
+          type: string
+          example: 'Gradle build failed: ...'
+        rustoreVersionId:
+          type: string
+          example: '123456'
+      required:
+        - status
+    TenantPropertyResponse:
+      type: object
+      properties:
+        address:
+          type: string
+          example: ul. Lenina, 1
+        city:
+          type: string
+          example: Moscow
+        apartmentNumber:
+          type: string
+          example: '12'
+        coverUrl:
+          type: string
+          example: https://storage.rentflow.tech/properties/cover.jpg
+          description: First property image, used as the card cover
+      required:
+        - address
+        - city
+    TenantLandlordResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Ivan Petrov
+        phone:
+          type: string
+          example: '+79991234567'
+        email:
+          type: string
+          example: landlord@example.com
+    TenantRentalResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        status:
+          type: string
+          example: ACTIVE
+          enum:
+            - UNSPECIFIED
+            - ACTIVE
+            - UPCOMING
+            - CLOSING
+            - COMPLETED
+        paymentStatus:
+          type: string
+          example: PENDING
+          enum:
+            - UNSPECIFIED
+            - PENDING
+            - PAID
+            - OVERDUE
+        rentAmount:
+          type: string
+          example: '50000.00'
+          description: Decimal as string
+        currency:
+          type: string
+          example: RUB
+        nextPaymentDate:
+          type: string
+          example: '2026-06-01T00:00:00.000Z'
+        startDate:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        endDate:
+          type: string
+          example: '2027-05-01T00:00:00.000Z'
+        property:
+          $ref: '#/components/schemas/TenantPropertyResponse'
+        landlord:
+          nullable: true
+          description: >-
+            Landlord contact info; null when the landlord profile could not be
+            resolved
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TenantLandlordResponse'
+      required:
+        - id
+        - status
+        - paymentStatus
+        - rentAmount
+        - currency
+        - property
+    TenantOverviewResponse:
+      type: object
+      properties:
+        hasAccess:
+          type: boolean
+          example: true
+          description: >-
+            False when the account email matches no contact with mobile access
+            enabled
+        rentals:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantRentalResponse'
+      required:
+        - hasAccess
+        - rentals
+    TenantInvoiceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        rentalId:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        type:
+          type: string
+          example: RENT
+          enum:
+            - UNSPECIFIED
+            - RENT
+            - DEPOSIT
+            - UTILITIES
+            - PENALTY
+            - ADDITIONAL
+            - ONE_TIME
+        status:
+          type: string
+          example: PENDING
+          enum:
+            - UNSPECIFIED
+            - PENDING
+            - PAID
+            - OVERDUE
+            - CANCELLED
+            - ADJUSTED
+            - PARTIAL
+        title:
+          type: string
+          example: Rent for May 2026
+        amount:
+          type: string
+          example: '50000.00'
+          description: Decimal as string
+        currency:
+          type: string
+          example: RUB
+        periodStart:
+          type: string
+          example: '2026-05-01T00:00:00.000Z'
+        periodEnd:
+          type: string
+          example: '2026-05-31T00:00:00.000Z'
+        dueDate:
+          type: string
+          example: '2026-06-05T00:00:00.000Z'
+        paidAt:
+          type: string
+          example: '2026-06-01T12:30:00.000Z'
+      required:
+        - id
+        - rentalId
+        - type
+        - status
+        - title
+        - amount
+        - currency
+    TenantInvoicesResponse:
+      type: object
+      properties:
+        hasAccess:
+          type: boolean
+          example: true
+          description: >-
+            False when the account email matches no contact with mobile access
+            enabled
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantInvoiceResponse'
+      required:
+        - hasAccess
+        - items
+    TenantDocumentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: X6KBMTnCDkbrPN_I0YXG8
+        title:
+          type: string
+          example: Lease contract
+        type:
+          type: string
+          example: LEASE_CONTRACT
+          enum:
+            - UNSPECIFIED
+            - LEASE_CONTRACT
+            - ACT_TRANSFER
+            - ACT_RETURN
+            - APPENDIX
+            - REGISTRATION_APPLICATION
+            - OTHER
+        status:
+          type: string
+          example: SENT
+          enum:
+            - SENT
+            - SIGNED_BY_ME
+            - SIGNED_BY_TENANT
+            - SIGNED_BY_BOTH
+          description: Only tenant-visible statuses are ever returned
+        fileUrl:
+          type: string
+          example: https://storage.rentflow.tech/documents/lease.pdf
+        signingDeadlineAt:
+          type: string
+          example: '2026-06-10T00:00:00.000Z'
+      required:
+        - id
+        - title
+        - type
+        - status
+    TenantDocumentsResponse:
+      type: object
+      properties:
+        hasAccess:
+          type: boolean
+          example: true
+          description: >-
+            False when the account email matches no contact with mobile access
+            enabled
+        toSign:
+          description: >-
+            Documents awaiting the tenant signature (status SENT or
+            SIGNED_BY_ME)
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantDocumentResponse'
+        archive:
+          description: >-
+            Documents the tenant already signed (SIGNED_BY_TENANT or
+            SIGNED_BY_BOTH)
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantDocumentResponse'
+      required:
+        - hasAccess
+        - toSign
+        - archive

@@ -22,6 +22,11 @@ void main() {
       // TODO
     });
 
+    // String currency
+    test('to test the property `currency`', () async {
+      // TODO
+    });
+
     // String period
     test('to test the property `period`', () async {
       // TODO

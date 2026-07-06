@@ -86,6 +86,8 @@ class _$UpdateRentalRequest extends UpdateRentalRequest {
   @override
   final String? rentAmount;
   @override
+  final String? currency;
+  @override
   final UpdateRentalRequestPeriodEnum? period;
   @override
   final String? vatPercent;
@@ -104,6 +106,7 @@ class _$UpdateRentalRequest extends UpdateRentalRequest {
       {this.startDate,
       this.endDate,
       this.rentAmount,
+      this.currency,
       this.period,
       this.vatPercent,
       this.depositAmount,
@@ -126,6 +129,7 @@ class _$UpdateRentalRequest extends UpdateRentalRequest {
         startDate == other.startDate &&
         endDate == other.endDate &&
         rentAmount == other.rentAmount &&
+        currency == other.currency &&
         period == other.period &&
         vatPercent == other.vatPercent &&
         depositAmount == other.depositAmount &&
@@ -139,6 +143,7 @@ class _$UpdateRentalRequest extends UpdateRentalRequest {
     _$hash = $jc(_$hash, startDate.hashCode);
     _$hash = $jc(_$hash, endDate.hashCode);
     _$hash = $jc(_$hash, rentAmount.hashCode);
+    _$hash = $jc(_$hash, currency.hashCode);
     _$hash = $jc(_$hash, period.hashCode);
     _$hash = $jc(_$hash, vatPercent.hashCode);
     _$hash = $jc(_$hash, depositAmount.hashCode);
@@ -154,6 +159,7 @@ class _$UpdateRentalRequest extends UpdateRentalRequest {
           ..add('startDate', startDate)
           ..add('endDate', endDate)
           ..add('rentAmount', rentAmount)
+          ..add('currency', currency)
           ..add('period', period)
           ..add('vatPercent', vatPercent)
           ..add('depositAmount', depositAmount)
@@ -178,6 +184,10 @@ class UpdateRentalRequestBuilder
   String? _rentAmount;
   String? get rentAmount => _$this._rentAmount;
   set rentAmount(String? rentAmount) => _$this._rentAmount = rentAmount;
+
+  String? _currency;
+  String? get currency => _$this._currency;
+  set currency(String? currency) => _$this._currency = currency;
 
   UpdateRentalRequestPeriodEnum? _period;
   UpdateRentalRequestPeriodEnum? get period => _$this._period;
@@ -211,6 +221,7 @@ class UpdateRentalRequestBuilder
       _startDate = $v.startDate;
       _endDate = $v.endDate;
       _rentAmount = $v.rentAmount;
+      _currency = $v.currency;
       _period = $v.period;
       _vatPercent = $v.vatPercent;
       _depositAmount = $v.depositAmount;
@@ -240,6 +251,7 @@ class UpdateRentalRequestBuilder
           startDate: startDate,
           endDate: endDate,
           rentAmount: rentAmount,
+          currency: currency,
           period: period,
           vatPercent: vatPercent,
           depositAmount: depositAmount,

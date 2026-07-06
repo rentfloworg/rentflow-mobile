@@ -17,6 +17,9 @@ part 'update_property_request.g.dart';
 /// * [description] 
 /// * [address] 
 /// * [city] 
+/// * [apartmentNumber] 
+/// * [ownerType] 
+/// * [phone] 
 /// * [area] 
 /// * [livingArea] 
 /// * [rooms] 
@@ -27,6 +30,7 @@ part 'update_property_request.g.dart';
 /// * [renovation] 
 /// * [bathroom] 
 /// * [bathroomCount] 
+/// * [housingType] 
 /// * [balcony] 
 /// * [loggia] 
 /// * [wardrobe] 
@@ -65,6 +69,16 @@ abstract class UpdatePropertyRequest implements Built<UpdatePropertyRequest, Upd
   @BuiltValueField(wireName: r'city')
   String? get city;
 
+  @BuiltValueField(wireName: r'apartmentNumber')
+  String? get apartmentNumber;
+
+  @BuiltValueField(wireName: r'ownerType')
+  UpdatePropertyRequestOwnerTypeEnum? get ownerType;
+  // enum ownerTypeEnum {  OWNER,  AGENT,  };
+
+  @BuiltValueField(wireName: r'phone')
+  String? get phone;
+
   @BuiltValueField(wireName: r'area')
   String? get area;
 
@@ -97,6 +111,10 @@ abstract class UpdatePropertyRequest implements Built<UpdatePropertyRequest, Upd
 
   @BuiltValueField(wireName: r'bathroomCount')
   num? get bathroomCount;
+
+  @BuiltValueField(wireName: r'housingType')
+  UpdatePropertyRequestHousingTypeEnum? get housingType;
+  // enum housingTypeEnum {  APARTMENT,  APARTMENTS,  };
 
   @BuiltValueField(wireName: r'balcony')
   bool? get balcony;
@@ -216,6 +234,27 @@ class _$UpdatePropertyRequestSerializer implements PrimitiveSerializer<UpdatePro
         specifiedType: const FullType(String),
       );
     }
+    if (object.apartmentNumber != null) {
+      yield r'apartmentNumber';
+      yield serializers.serialize(
+        object.apartmentNumber,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.ownerType != null) {
+      yield r'ownerType';
+      yield serializers.serialize(
+        object.ownerType,
+        specifiedType: const FullType(UpdatePropertyRequestOwnerTypeEnum),
+      );
+    }
+    if (object.phone != null) {
+      yield r'phone';
+      yield serializers.serialize(
+        object.phone,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.area != null) {
       yield r'area';
       yield serializers.serialize(
@@ -284,6 +323,13 @@ class _$UpdatePropertyRequestSerializer implements PrimitiveSerializer<UpdatePro
       yield serializers.serialize(
         object.bathroomCount,
         specifiedType: const FullType(num),
+      );
+    }
+    if (object.housingType != null) {
+      yield r'housingType';
+      yield serializers.serialize(
+        object.housingType,
+        specifiedType: const FullType(UpdatePropertyRequestHousingTypeEnum),
       );
     }
     if (object.balcony != null) {
@@ -484,6 +530,27 @@ class _$UpdatePropertyRequestSerializer implements PrimitiveSerializer<UpdatePro
           ) as String;
           result.city = valueDes;
           break;
+        case r'apartmentNumber':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.apartmentNumber = valueDes;
+          break;
+        case r'ownerType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(UpdatePropertyRequestOwnerTypeEnum),
+          ) as UpdatePropertyRequestOwnerTypeEnum;
+          result.ownerType = valueDes;
+          break;
+        case r'phone':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.phone = valueDes;
+          break;
         case r'area':
           final valueDes = serializers.deserialize(
             value,
@@ -553,6 +620,13 @@ class _$UpdatePropertyRequestSerializer implements PrimitiveSerializer<UpdatePro
             specifiedType: const FullType(num),
           ) as num;
           result.bathroomCount = valueDes;
+          break;
+        case r'housingType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(UpdatePropertyRequestHousingTypeEnum),
+          ) as UpdatePropertyRequestHousingTypeEnum;
+          result.housingType = valueDes;
           break;
         case r'balcony':
           final valueDes = serializers.deserialize(
@@ -744,6 +818,21 @@ class UpdatePropertyRequestTypeEnum extends EnumClass {
   static UpdatePropertyRequestTypeEnum valueOf(String name) => _$updatePropertyRequestTypeEnumValueOf(name);
 }
 
+class UpdatePropertyRequestOwnerTypeEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'OWNER')
+  static const UpdatePropertyRequestOwnerTypeEnum OWNER = _$updatePropertyRequestOwnerTypeEnum_OWNER;
+  @BuiltValueEnumConst(wireName: r'AGENT')
+  static const UpdatePropertyRequestOwnerTypeEnum AGENT = _$updatePropertyRequestOwnerTypeEnum_AGENT;
+
+  static Serializer<UpdatePropertyRequestOwnerTypeEnum> get serializer => _$updatePropertyRequestOwnerTypeEnumSerializer;
+
+  const UpdatePropertyRequestOwnerTypeEnum._(String name): super(name);
+
+  static BuiltSet<UpdatePropertyRequestOwnerTypeEnum> get values => _$updatePropertyRequestOwnerTypeEnumValues;
+  static UpdatePropertyRequestOwnerTypeEnum valueOf(String name) => _$updatePropertyRequestOwnerTypeEnumValueOf(name);
+}
+
 class UpdatePropertyRequestBuildingTypeEnum extends EnumClass {
 
   @BuiltValueEnumConst(wireName: r'BRICK')
@@ -801,5 +890,20 @@ class UpdatePropertyRequestBathroomEnum extends EnumClass {
 
   static BuiltSet<UpdatePropertyRequestBathroomEnum> get values => _$updatePropertyRequestBathroomEnumValues;
   static UpdatePropertyRequestBathroomEnum valueOf(String name) => _$updatePropertyRequestBathroomEnumValueOf(name);
+}
+
+class UpdatePropertyRequestHousingTypeEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'APARTMENT')
+  static const UpdatePropertyRequestHousingTypeEnum APARTMENT = _$updatePropertyRequestHousingTypeEnum_APARTMENT;
+  @BuiltValueEnumConst(wireName: r'APARTMENTS')
+  static const UpdatePropertyRequestHousingTypeEnum APARTMENTS = _$updatePropertyRequestHousingTypeEnum_APARTMENTS;
+
+  static Serializer<UpdatePropertyRequestHousingTypeEnum> get serializer => _$updatePropertyRequestHousingTypeEnumSerializer;
+
+  const UpdatePropertyRequestHousingTypeEnum._(String name): super(name);
+
+  static BuiltSet<UpdatePropertyRequestHousingTypeEnum> get values => _$updatePropertyRequestHousingTypeEnumValues;
+  static UpdatePropertyRequestHousingTypeEnum valueOf(String name) => _$updatePropertyRequestHousingTypeEnumValueOf(name);
 }
 

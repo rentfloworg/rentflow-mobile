@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**accountControllerAssignSubAccountProperty**](AccountApi.md#accountcontrollerassignsubaccountproperty) | **POST** /account/sub-accounts/{id}/properties | Assign property to sub-account
 [**accountControllerConfirmEmailChange**](AccountApi.md#accountcontrollerconfirmemailchange) | **POST** /account/email/confirm | Confirm email change
 [**accountControllerConfirmPhoneChange**](AccountApi.md#accountcontrollerconfirmphonechange) | **POST** /account/phone/confirm | Confirm phone change
 [**accountControllerDeleteCompanyDocument**](AccountApi.md#accountcontrollerdeletecompanydocument) | **DELETE** /account/documents/{id} | Delete company document
@@ -20,12 +21,57 @@ Method | HTTP request | Description
 [**accountControllerInviteSubAccount**](AccountApi.md#accountcontrollerinvitesubaccount) | **POST** /account/sub-accounts | Invite sub-account
 [**accountControllerListCompanyDocuments**](AccountApi.md#accountcontrollerlistcompanydocuments) | **GET** /account/documents | List company documents
 [**accountControllerListSubAccounts**](AccountApi.md#accountcontrollerlistsubaccounts) | **GET** /account/sub-accounts | List sub-accounts
+[**accountControllerUnassignSubAccountProperty**](AccountApi.md#accountcontrollerunassignsubaccountproperty) | **DELETE** /account/sub-accounts/{id}/properties/{propertyId} | Unassign property from sub-account
 [**accountControllerUpdateAccountType**](AccountApi.md#accountcontrollerupdateaccounttype) | **PATCH** /account/type | Update account type
 [**accountControllerUpdateSubAccount**](AccountApi.md#accountcontrollerupdatesubaccount) | **PATCH** /account/sub-accounts/{id} | Update sub-account (role/status)
 [**accountControllerUpdateTelegram**](AccountApi.md#accountcontrollerupdatetelegram) | **PUT** /account/telegram | Update telegram link
 [**accountControllerUploadCompanyDocument**](AccountApi.md#accountcontrolleruploadcompanydocument) | **POST** /account/documents | Upload (register) company document metadata
 [**accountControllerUpsertCompanyProfile**](AccountApi.md#accountcontrollerupsertcompanyprofile) | **PUT** /account/company | Upsert company profile
 
+
+# **accountControllerAssignSubAccountProperty**
+> accountControllerAssignSubAccountProperty(id, assignSubAccountPropertyRequest)
+
+Assign property to sub-account
+
+Grants a sub-account access to a property owned by the current account. Idempotent.
+
+### Example
+```dart
+import 'package:rentflow_api/api.dart';
+
+final api = RentflowApi().getAccountApi();
+final String id = id_example; // String | 
+final AssignSubAccountPropertyRequest assignSubAccountPropertyRequest = ; // AssignSubAccountPropertyRequest | 
+
+try {
+    api.accountControllerAssignSubAccountProperty(id, assignSubAccountPropertyRequest);
+} catch on DioException (e) {
+    print('Exception when calling AccountApi->accountControllerAssignSubAccountProperty: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **assignSubAccountPropertyRequest** | [**AssignSubAccountPropertyRequest**](AssignSubAccountPropertyRequest.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **accountControllerConfirmEmailChange**
 > accountControllerConfirmEmailChange(confirmEmailChangeRequest)
@@ -196,7 +242,7 @@ void (empty response body)
 
 Get account by id
 
-Returns the Account aggregate by id.
+Returns the caller own Account aggregate.
 
 ### Example
 ```dart
@@ -224,7 +270,7 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[bearer](../README.md#bearer)
 
 ### HTTP request headers
 
@@ -453,6 +499,50 @@ try {
 
 ### Parameters
 This endpoint does not need any parameter.
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **accountControllerUnassignSubAccountProperty**
+> accountControllerUnassignSubAccountProperty(id, propertyId)
+
+Unassign property from sub-account
+
+Revokes a sub-account access to a property. Missing assignment is a no-op.
+
+### Example
+```dart
+import 'package:rentflow_api/api.dart';
+
+final api = RentflowApi().getAccountApi();
+final String id = id_example; // String | 
+final String propertyId = propertyId_example; // String | 
+
+try {
+    api.accountControllerUnassignSubAccountProperty(id, propertyId);
+} catch on DioException (e) {
+    print('Exception when calling AccountApi->accountControllerUnassignSubAccountProperty: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **propertyId** | **String**|  | 
 
 ### Return type
 

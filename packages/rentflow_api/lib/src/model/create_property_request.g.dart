@@ -45,6 +45,32 @@ final BuiltSet<CreatePropertyRequestTypeEnum>
   _$createPropertyRequestTypeEnum_LAND,
 ]);
 
+const CreatePropertyRequestOwnerTypeEnum
+    _$createPropertyRequestOwnerTypeEnum_OWNER =
+    const CreatePropertyRequestOwnerTypeEnum._('OWNER');
+const CreatePropertyRequestOwnerTypeEnum
+    _$createPropertyRequestOwnerTypeEnum_AGENT =
+    const CreatePropertyRequestOwnerTypeEnum._('AGENT');
+
+CreatePropertyRequestOwnerTypeEnum _$createPropertyRequestOwnerTypeEnumValueOf(
+    String name) {
+  switch (name) {
+    case 'OWNER':
+      return _$createPropertyRequestOwnerTypeEnum_OWNER;
+    case 'AGENT':
+      return _$createPropertyRequestOwnerTypeEnum_AGENT;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<CreatePropertyRequestOwnerTypeEnum>
+    _$createPropertyRequestOwnerTypeEnumValues = BuiltSet<
+        CreatePropertyRequestOwnerTypeEnum>(const <CreatePropertyRequestOwnerTypeEnum>[
+  _$createPropertyRequestOwnerTypeEnum_OWNER,
+  _$createPropertyRequestOwnerTypeEnum_AGENT,
+]);
+
 const CreatePropertyRequestBuildingTypeEnum
     _$createPropertyRequestBuildingTypeEnum_BRICK =
     const CreatePropertyRequestBuildingTypeEnum._('BRICK');
@@ -165,9 +191,38 @@ final BuiltSet<CreatePropertyRequestBathroomEnum>
   _$createPropertyRequestBathroomEnum_SEVERAL,
 ]);
 
+const CreatePropertyRequestHousingTypeEnum
+    _$createPropertyRequestHousingTypeEnum_APARTMENT =
+    const CreatePropertyRequestHousingTypeEnum._('APARTMENT');
+const CreatePropertyRequestHousingTypeEnum
+    _$createPropertyRequestHousingTypeEnum_APARTMENTS =
+    const CreatePropertyRequestHousingTypeEnum._('APARTMENTS');
+
+CreatePropertyRequestHousingTypeEnum
+    _$createPropertyRequestHousingTypeEnumValueOf(String name) {
+  switch (name) {
+    case 'APARTMENT':
+      return _$createPropertyRequestHousingTypeEnum_APARTMENT;
+    case 'APARTMENTS':
+      return _$createPropertyRequestHousingTypeEnum_APARTMENTS;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<CreatePropertyRequestHousingTypeEnum>
+    _$createPropertyRequestHousingTypeEnumValues = BuiltSet<
+        CreatePropertyRequestHousingTypeEnum>(const <CreatePropertyRequestHousingTypeEnum>[
+  _$createPropertyRequestHousingTypeEnum_APARTMENT,
+  _$createPropertyRequestHousingTypeEnum_APARTMENTS,
+]);
+
 Serializer<CreatePropertyRequestTypeEnum>
     _$createPropertyRequestTypeEnumSerializer =
     _$CreatePropertyRequestTypeEnumSerializer();
+Serializer<CreatePropertyRequestOwnerTypeEnum>
+    _$createPropertyRequestOwnerTypeEnumSerializer =
+    _$CreatePropertyRequestOwnerTypeEnumSerializer();
 Serializer<CreatePropertyRequestBuildingTypeEnum>
     _$createPropertyRequestBuildingTypeEnumSerializer =
     _$CreatePropertyRequestBuildingTypeEnumSerializer();
@@ -177,6 +232,9 @@ Serializer<CreatePropertyRequestRenovationEnum>
 Serializer<CreatePropertyRequestBathroomEnum>
     _$createPropertyRequestBathroomEnumSerializer =
     _$CreatePropertyRequestBathroomEnumSerializer();
+Serializer<CreatePropertyRequestHousingTypeEnum>
+    _$createPropertyRequestHousingTypeEnumSerializer =
+    _$CreatePropertyRequestHousingTypeEnumSerializer();
 
 class _$CreatePropertyRequestTypeEnumSerializer
     implements PrimitiveSerializer<CreatePropertyRequestTypeEnum> {
@@ -211,6 +269,36 @@ class _$CreatePropertyRequestTypeEnumSerializer
           Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
       CreatePropertyRequestTypeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
+class _$CreatePropertyRequestOwnerTypeEnumSerializer
+    implements PrimitiveSerializer<CreatePropertyRequestOwnerTypeEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'OWNER': 'OWNER',
+    'AGENT': 'AGENT',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'OWNER': 'OWNER',
+    'AGENT': 'AGENT',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[CreatePropertyRequestOwnerTypeEnum];
+  @override
+  final String wireName = 'CreatePropertyRequestOwnerTypeEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, CreatePropertyRequestOwnerTypeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  CreatePropertyRequestOwnerTypeEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      CreatePropertyRequestOwnerTypeEnum.valueOf(
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
@@ -322,6 +410,38 @@ class _$CreatePropertyRequestBathroomEnumSerializer
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
+class _$CreatePropertyRequestHousingTypeEnumSerializer
+    implements PrimitiveSerializer<CreatePropertyRequestHousingTypeEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'APARTMENT': 'APARTMENT',
+    'APARTMENTS': 'APARTMENTS',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'APARTMENT': 'APARTMENT',
+    'APARTMENTS': 'APARTMENTS',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[
+    CreatePropertyRequestHousingTypeEnum
+  ];
+  @override
+  final String wireName = 'CreatePropertyRequestHousingTypeEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, CreatePropertyRequestHousingTypeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  CreatePropertyRequestHousingTypeEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      CreatePropertyRequestHousingTypeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
 class _$CreatePropertyRequest extends CreatePropertyRequest {
   @override
   final String? managerId;
@@ -333,6 +453,12 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
   final String address;
   @override
   final String city;
+  @override
+  final String? apartmentNumber;
+  @override
+  final CreatePropertyRequestOwnerTypeEnum? ownerType;
+  @override
+  final String? phone;
   @override
   final String? area;
   @override
@@ -353,6 +479,8 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
   final CreatePropertyRequestBathroomEnum? bathroom;
   @override
   final num? bathroomCount;
+  @override
+  final CreatePropertyRequestHousingTypeEnum? housingType;
   @override
   final bool? balcony;
   @override
@@ -412,6 +540,9 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
       this.description,
       required this.address,
       required this.city,
+      this.apartmentNumber,
+      this.ownerType,
+      this.phone,
       this.area,
       this.livingArea,
       this.rooms,
@@ -422,6 +553,7 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
       this.renovation,
       this.bathroom,
       this.bathroomCount,
+      this.housingType,
       this.balcony,
       this.loggia,
       this.wardrobe,
@@ -465,6 +597,9 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
         description == other.description &&
         address == other.address &&
         city == other.city &&
+        apartmentNumber == other.apartmentNumber &&
+        ownerType == other.ownerType &&
+        phone == other.phone &&
         area == other.area &&
         livingArea == other.livingArea &&
         rooms == other.rooms &&
@@ -475,6 +610,7 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
         renovation == other.renovation &&
         bathroom == other.bathroom &&
         bathroomCount == other.bathroomCount &&
+        housingType == other.housingType &&
         balcony == other.balcony &&
         loggia == other.loggia &&
         wardrobe == other.wardrobe &&
@@ -509,6 +645,9 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
     _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jc(_$hash, address.hashCode);
     _$hash = $jc(_$hash, city.hashCode);
+    _$hash = $jc(_$hash, apartmentNumber.hashCode);
+    _$hash = $jc(_$hash, ownerType.hashCode);
+    _$hash = $jc(_$hash, phone.hashCode);
     _$hash = $jc(_$hash, area.hashCode);
     _$hash = $jc(_$hash, livingArea.hashCode);
     _$hash = $jc(_$hash, rooms.hashCode);
@@ -519,6 +658,7 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
     _$hash = $jc(_$hash, renovation.hashCode);
     _$hash = $jc(_$hash, bathroom.hashCode);
     _$hash = $jc(_$hash, bathroomCount.hashCode);
+    _$hash = $jc(_$hash, housingType.hashCode);
     _$hash = $jc(_$hash, balcony.hashCode);
     _$hash = $jc(_$hash, loggia.hashCode);
     _$hash = $jc(_$hash, wardrobe.hashCode);
@@ -555,6 +695,9 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
           ..add('description', description)
           ..add('address', address)
           ..add('city', city)
+          ..add('apartmentNumber', apartmentNumber)
+          ..add('ownerType', ownerType)
+          ..add('phone', phone)
           ..add('area', area)
           ..add('livingArea', livingArea)
           ..add('rooms', rooms)
@@ -565,6 +708,7 @@ class _$CreatePropertyRequest extends CreatePropertyRequest {
           ..add('renovation', renovation)
           ..add('bathroom', bathroom)
           ..add('bathroomCount', bathroomCount)
+          ..add('housingType', housingType)
           ..add('balcony', balcony)
           ..add('loggia', loggia)
           ..add('wardrobe', wardrobe)
@@ -617,6 +761,20 @@ class CreatePropertyRequestBuilder
   String? get city => _$this._city;
   set city(String? city) => _$this._city = city;
 
+  String? _apartmentNumber;
+  String? get apartmentNumber => _$this._apartmentNumber;
+  set apartmentNumber(String? apartmentNumber) =>
+      _$this._apartmentNumber = apartmentNumber;
+
+  CreatePropertyRequestOwnerTypeEnum? _ownerType;
+  CreatePropertyRequestOwnerTypeEnum? get ownerType => _$this._ownerType;
+  set ownerType(CreatePropertyRequestOwnerTypeEnum? ownerType) =>
+      _$this._ownerType = ownerType;
+
+  String? _phone;
+  String? get phone => _$this._phone;
+  set phone(String? phone) => _$this._phone = phone;
+
   String? _area;
   String? get area => _$this._area;
   set area(String? area) => _$this._area = area;
@@ -661,6 +819,11 @@ class CreatePropertyRequestBuilder
   num? get bathroomCount => _$this._bathroomCount;
   set bathroomCount(num? bathroomCount) =>
       _$this._bathroomCount = bathroomCount;
+
+  CreatePropertyRequestHousingTypeEnum? _housingType;
+  CreatePropertyRequestHousingTypeEnum? get housingType => _$this._housingType;
+  set housingType(CreatePropertyRequestHousingTypeEnum? housingType) =>
+      _$this._housingType = housingType;
 
   bool? _balcony;
   bool? get balcony => _$this._balcony;
@@ -789,6 +952,9 @@ class CreatePropertyRequestBuilder
       _description = $v.description;
       _address = $v.address;
       _city = $v.city;
+      _apartmentNumber = $v.apartmentNumber;
+      _ownerType = $v.ownerType;
+      _phone = $v.phone;
       _area = $v.area;
       _livingArea = $v.livingArea;
       _rooms = $v.rooms;
@@ -799,6 +965,7 @@ class CreatePropertyRequestBuilder
       _renovation = $v.renovation;
       _bathroom = $v.bathroom;
       _bathroomCount = $v.bathroomCount;
+      _housingType = $v.housingType;
       _balcony = $v.balcony;
       _loggia = $v.loggia;
       _wardrobe = $v.wardrobe;
@@ -854,6 +1021,9 @@ class CreatePropertyRequestBuilder
                 address, r'CreatePropertyRequest', 'address'),
             city: BuiltValueNullFieldError.checkNotNull(
                 city, r'CreatePropertyRequest', 'city'),
+            apartmentNumber: apartmentNumber,
+            ownerType: ownerType,
+            phone: phone,
             area: area,
             livingArea: livingArea,
             rooms: rooms,
@@ -864,6 +1034,7 @@ class CreatePropertyRequestBuilder
             renovation: renovation,
             bathroom: bathroom,
             bathroomCount: bathroomCount,
+            housingType: housingType,
             balcony: balcony,
             loggia: loggia,
             wardrobe: wardrobe,

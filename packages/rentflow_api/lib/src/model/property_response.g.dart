@@ -14,9 +14,15 @@ class _$PropertyResponse extends PropertyResponse {
   @override
   final String? managerId;
   @override
+  final String? ownerType;
+  @override
+  final String? phone;
+  @override
   final String status;
   @override
   final String type;
+  @override
+  final String? housingType;
   @override
   final String? description;
   @override
@@ -25,6 +31,8 @@ class _$PropertyResponse extends PropertyResponse {
   final String city;
   @override
   final String? cadastralNumber;
+  @override
+  final String? apartmentNumber;
   @override
   final String? area;
   @override
@@ -108,12 +116,16 @@ class _$PropertyResponse extends PropertyResponse {
       {required this.id,
       required this.ownerId,
       this.managerId,
+      this.ownerType,
+      this.phone,
       required this.status,
       required this.type,
+      this.housingType,
       this.description,
       required this.address,
       required this.city,
       this.cadastralNumber,
+      this.apartmentNumber,
       this.area,
       this.livingArea,
       this.rooms,
@@ -167,12 +179,16 @@ class _$PropertyResponse extends PropertyResponse {
         id == other.id &&
         ownerId == other.ownerId &&
         managerId == other.managerId &&
+        ownerType == other.ownerType &&
+        phone == other.phone &&
         status == other.status &&
         type == other.type &&
+        housingType == other.housingType &&
         description == other.description &&
         address == other.address &&
         city == other.city &&
         cadastralNumber == other.cadastralNumber &&
+        apartmentNumber == other.apartmentNumber &&
         area == other.area &&
         livingArea == other.livingArea &&
         rooms == other.rooms &&
@@ -218,12 +234,16 @@ class _$PropertyResponse extends PropertyResponse {
     _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jc(_$hash, ownerId.hashCode);
     _$hash = $jc(_$hash, managerId.hashCode);
+    _$hash = $jc(_$hash, ownerType.hashCode);
+    _$hash = $jc(_$hash, phone.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jc(_$hash, type.hashCode);
+    _$hash = $jc(_$hash, housingType.hashCode);
     _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jc(_$hash, address.hashCode);
     _$hash = $jc(_$hash, city.hashCode);
     _$hash = $jc(_$hash, cadastralNumber.hashCode);
+    _$hash = $jc(_$hash, apartmentNumber.hashCode);
     _$hash = $jc(_$hash, area.hashCode);
     _$hash = $jc(_$hash, livingArea.hashCode);
     _$hash = $jc(_$hash, rooms.hashCode);
@@ -271,12 +291,16 @@ class _$PropertyResponse extends PropertyResponse {
           ..add('id', id)
           ..add('ownerId', ownerId)
           ..add('managerId', managerId)
+          ..add('ownerType', ownerType)
+          ..add('phone', phone)
           ..add('status', status)
           ..add('type', type)
+          ..add('housingType', housingType)
           ..add('description', description)
           ..add('address', address)
           ..add('city', city)
           ..add('cadastralNumber', cadastralNumber)
+          ..add('apartmentNumber', apartmentNumber)
           ..add('area', area)
           ..add('livingArea', livingArea)
           ..add('rooms', rooms)
@@ -334,6 +358,14 @@ class PropertyResponseBuilder
   String? get managerId => _$this._managerId;
   set managerId(String? managerId) => _$this._managerId = managerId;
 
+  String? _ownerType;
+  String? get ownerType => _$this._ownerType;
+  set ownerType(String? ownerType) => _$this._ownerType = ownerType;
+
+  String? _phone;
+  String? get phone => _$this._phone;
+  set phone(String? phone) => _$this._phone = phone;
+
   String? _status;
   String? get status => _$this._status;
   set status(String? status) => _$this._status = status;
@@ -341,6 +373,10 @@ class PropertyResponseBuilder
   String? _type;
   String? get type => _$this._type;
   set type(String? type) => _$this._type = type;
+
+  String? _housingType;
+  String? get housingType => _$this._housingType;
+  set housingType(String? housingType) => _$this._housingType = housingType;
 
   String? _description;
   String? get description => _$this._description;
@@ -358,6 +394,11 @@ class PropertyResponseBuilder
   String? get cadastralNumber => _$this._cadastralNumber;
   set cadastralNumber(String? cadastralNumber) =>
       _$this._cadastralNumber = cadastralNumber;
+
+  String? _apartmentNumber;
+  String? get apartmentNumber => _$this._apartmentNumber;
+  set apartmentNumber(String? apartmentNumber) =>
+      _$this._apartmentNumber = apartmentNumber;
 
   String? _area;
   String? get area => _$this._area;
@@ -539,12 +580,16 @@ class PropertyResponseBuilder
       _id = $v.id;
       _ownerId = $v.ownerId;
       _managerId = $v.managerId;
+      _ownerType = $v.ownerType;
+      _phone = $v.phone;
       _status = $v.status;
       _type = $v.type;
+      _housingType = $v.housingType;
       _description = $v.description;
       _address = $v.address;
       _city = $v.city;
       _cadastralNumber = $v.cadastralNumber;
+      _apartmentNumber = $v.apartmentNumber;
       _area = $v.area;
       _livingArea = $v.livingArea;
       _rooms = $v.rooms;
@@ -610,16 +655,20 @@ class PropertyResponseBuilder
             ownerId: BuiltValueNullFieldError.checkNotNull(
                 ownerId, r'PropertyResponse', 'ownerId'),
             managerId: managerId,
+            ownerType: ownerType,
+            phone: phone,
             status: BuiltValueNullFieldError.checkNotNull(
                 status, r'PropertyResponse', 'status'),
             type: BuiltValueNullFieldError.checkNotNull(
                 type, r'PropertyResponse', 'type'),
+            housingType: housingType,
             description: description,
             address: BuiltValueNullFieldError.checkNotNull(
                 address, r'PropertyResponse', 'address'),
             city: BuiltValueNullFieldError.checkNotNull(
                 city, r'PropertyResponse', 'city'),
             cadastralNumber: cadastralNumber,
+            apartmentNumber: apartmentNumber,
             area: area,
             livingArea: livingArea,
             rooms: rooms,

@@ -20,12 +20,16 @@ part 'property_response.g.dart';
 /// * [id] 
 /// * [ownerId] 
 /// * [managerId] 
+/// * [ownerType] 
+/// * [phone] 
 /// * [status] 
 /// * [type] 
+/// * [housingType] 
 /// * [description] 
 /// * [address] 
 /// * [city] 
 /// * [cadastralNumber] 
+/// * [apartmentNumber] 
 /// * [area] 
 /// * [livingArea] 
 /// * [rooms] 
@@ -74,11 +78,20 @@ abstract class PropertyResponse implements Built<PropertyResponse, PropertyRespo
   @BuiltValueField(wireName: r'managerId')
   String? get managerId;
 
+  @BuiltValueField(wireName: r'ownerType')
+  String? get ownerType;
+
+  @BuiltValueField(wireName: r'phone')
+  String? get phone;
+
   @BuiltValueField(wireName: r'status')
   String get status;
 
   @BuiltValueField(wireName: r'type')
   String get type;
+
+  @BuiltValueField(wireName: r'housingType')
+  String? get housingType;
 
   @BuiltValueField(wireName: r'description')
   String? get description;
@@ -91,6 +104,9 @@ abstract class PropertyResponse implements Built<PropertyResponse, PropertyRespo
 
   @BuiltValueField(wireName: r'cadastralNumber')
   String? get cadastralNumber;
+
+  @BuiltValueField(wireName: r'apartmentNumber')
+  String? get apartmentNumber;
 
   @BuiltValueField(wireName: r'area')
   String? get area;
@@ -243,6 +259,20 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
         specifiedType: const FullType(String),
       );
     }
+    if (object.ownerType != null) {
+      yield r'ownerType';
+      yield serializers.serialize(
+        object.ownerType,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.phone != null) {
+      yield r'phone';
+      yield serializers.serialize(
+        object.phone,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'status';
     yield serializers.serialize(
       object.status,
@@ -253,6 +283,13 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
       object.type,
       specifiedType: const FullType(String),
     );
+    if (object.housingType != null) {
+      yield r'housingType';
+      yield serializers.serialize(
+        object.housingType,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.description != null) {
       yield r'description';
       yield serializers.serialize(
@@ -274,6 +311,13 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
       yield r'cadastralNumber';
       yield serializers.serialize(
         object.cadastralNumber,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.apartmentNumber != null) {
+      yield r'apartmentNumber';
+      yield serializers.serialize(
+        object.apartmentNumber,
         specifiedType: const FullType(String),
       );
     }
@@ -538,6 +582,20 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
           ) as String;
           result.managerId = valueDes;
           break;
+        case r'ownerType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.ownerType = valueDes;
+          break;
+        case r'phone':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.phone = valueDes;
+          break;
         case r'status':
           final valueDes = serializers.deserialize(
             value,
@@ -551,6 +609,13 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
             specifiedType: const FullType(String),
           ) as String;
           result.type = valueDes;
+          break;
+        case r'housingType':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.housingType = valueDes;
           break;
         case r'description':
           final valueDes = serializers.deserialize(
@@ -579,6 +644,13 @@ class _$PropertyResponseSerializer implements PrimitiveSerializer<PropertyRespon
             specifiedType: const FullType(String),
           ) as String;
           result.cadastralNumber = valueDes;
+          break;
+        case r'apartmentNumber':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.apartmentNumber = valueDes;
           break;
         case r'area':
           final valueDes = serializers.deserialize(

@@ -11,12 +11,16 @@ Name | Type | Description | Notes
 **id** | **String** |  | 
 **ownerId** | **String** |  | 
 **managerId** | **String** |  | [optional] 
+**ownerType** | **String** |  | [optional] 
+**phone** | **String** |  | [optional] 
 **status** | **String** |  | 
 **type** | **String** |  | 
+**housingType** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
 **address** | **String** |  | 
 **city** | **String** |  | 
 **cadastralNumber** | **String** |  | [optional] 
+**apartmentNumber** | **String** |  | [optional] 
 **area** | **String** |  | [optional] 
 **livingArea** | **String** |  | [optional] 
 **rooms** | **num** |  | [optional] 

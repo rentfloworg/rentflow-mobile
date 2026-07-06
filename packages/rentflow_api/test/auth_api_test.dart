@@ -32,9 +32,9 @@ void main() {
 
     // Refresh access token
     //
-    // Renews access token using refresh token from cookies
+    // Renews the token pair using the refresh token from the httpOnly cookie (OTP/SSO flow) or from the request body (OAuth PKCE flow storing tokens in localStorage)
     //
-    //Future authControllerRefresh() async
+    //Future authControllerRefresh(RefreshRequest refreshRequest) async
     test('test authControllerRefresh', () async {
       // TODO
     });
@@ -60,7 +60,7 @@ void main() {
 
     // Verify otp code
     //
-    // Verifies the code sent to the user phone number or email and returns a access token.
+    // Verifies the code sent to the user phone number or email and returns the token pair. Tokens are also set as httpOnly cookies for browser clients; the body fields serve clients without cookie storage (mobile app).
     //
     //Future authControllerVerifyOtp(VerifyOtpRequest verifyOtpRequest) async
     test('test authControllerVerifyOtp', () async {

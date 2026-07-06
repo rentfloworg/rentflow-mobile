@@ -15,6 +15,7 @@ part 'update_rental_request.g.dart';
 /// * [startDate] 
 /// * [endDate] 
 /// * [rentAmount] 
+/// * [currency] 
 /// * [period] 
 /// * [vatPercent] 
 /// * [depositAmount] 
@@ -30,6 +31,9 @@ abstract class UpdateRentalRequest implements Built<UpdateRentalRequest, UpdateR
 
   @BuiltValueField(wireName: r'rentAmount')
   String? get rentAmount;
+
+  @BuiltValueField(wireName: r'currency')
+  String? get currency;
 
   @BuiltValueField(wireName: r'period')
   UpdateRentalRequestPeriodEnum? get period;
@@ -88,6 +92,13 @@ class _$UpdateRentalRequestSerializer implements PrimitiveSerializer<UpdateRenta
       yield r'rentAmount';
       yield serializers.serialize(
         object.rentAmount,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.currency != null) {
+      yield r'currency';
+      yield serializers.serialize(
+        object.currency,
         specifiedType: const FullType(String),
       );
     }
@@ -169,6 +180,13 @@ class _$UpdateRentalRequestSerializer implements PrimitiveSerializer<UpdateRenta
             specifiedType: const FullType(String),
           ) as String;
           result.rentAmount = valueDes;
+          break;
+        case r'currency':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.currency = valueDes;
           break;
         case r'period':
           final valueDes = serializers.deserialize(

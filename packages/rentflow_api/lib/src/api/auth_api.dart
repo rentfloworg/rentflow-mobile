@@ -8,6 +8,7 @@ import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
+import 'package:rentflow_api/src/model/refresh_request.dart';
 import 'package:rentflow_api/src/model/send_otp_request.dart';
 import 'package:rentflow_api/src/model/telegram_finalize_request.dart';
 import 'package:rentflow_api/src/model/telegram_verify_request.dart';
@@ -179,9 +180,10 @@ class AuthApi {
   }
 
   /// Refresh access token
-  /// Renews access token using refresh token from cookies
+  /// Renews the token pair using the refresh token from the httpOnly cookie (OTP/SSO flow) or from the request body (OAuth PKCE flow storing tokens in localStorage)
   ///
   /// Parameters:
+  /// * [refreshRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -192,6 +194,7 @@ class AuthApi {
   /// Returns a [Future]
   /// Throws [DioException] if API call or serialization fails
   Future<Response<void>> authControllerRefresh({ 
+    required RefreshRequest refreshRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -209,11 +212,31 @@ class AuthApi {
         'secure': <Map<String, String>>[],
         ...?extra,
       },
+      contentType: 'application/json',
       validateStatus: validateStatus,
     );
 
+    dynamic _bodyData;
+
+    try {
+      const _type = FullType(RefreshRequest);
+      _bodyData = _serializers.serialize(refreshRequest, specifiedType: _type);
+
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
     final _response = await _dio.request<Object>(
       _path,
+      data: _bodyData,
       options: _options,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
@@ -403,7 +426,7 @@ class AuthApi {
   }
 
   /// Verify otp code
-  /// Verifies the code sent to the user phone number or email and returns a access token.
+  /// Verifies the code sent to the user phone number or email and returns the token pair. Tokens are also set as httpOnly cookies for browser clients; the body fields serve clients without cookie storage (mobile app).
   ///
   /// Parameters:
   /// * [verifyOtpRequest] 

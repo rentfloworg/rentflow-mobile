@@ -136,27 +136,31 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authControllerRefresh**
-> authControllerRefresh()
+> authControllerRefresh(refreshRequest)
 
 Refresh access token
 
-Renews access token using refresh token from cookies
+Renews the token pair using the refresh token from the httpOnly cookie (OTP/SSO flow) or from the request body (OAuth PKCE flow storing tokens in localStorage)
 
 ### Example
 ```dart
 import 'package:rentflow_api/api.dart';
 
 final api = RentflowApi().getAuthApi();
+final RefreshRequest refreshRequest = ; // RefreshRequest | 
 
 try {
-    api.authControllerRefresh();
+    api.authControllerRefresh(refreshRequest);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authControllerRefresh: $e\n');
 }
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **refreshRequest** | [**RefreshRequest**](RefreshRequest.md)|  | 
 
 ### Return type
 
@@ -168,7 +172,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -296,7 +300,7 @@ No authorization required
 
 Verify otp code
 
-Verifies the code sent to the user phone number or email and returns a access token.
+Verifies the code sent to the user phone number or email and returns the token pair. Tokens are also set as httpOnly cookies for browser clients; the body fields serve clients without cookie storage (mobile app).
 
 ### Example
 ```dart
