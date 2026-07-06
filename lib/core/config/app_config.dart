@@ -25,8 +25,8 @@ class AppConfig {
     defaultValue: 'http://10.0.2.2:4000',
   );
 
-  /// OAuth2 (PKCE) authorization server. Empty → PKCE login is hidden and
-  /// phone OTP is the only entry point.
+  /// OAuth2 authorization server settings. Still defined by build profiles;
+  /// the app itself signs in via email OTP only.
   static const String oauthBaseUrl = String.fromEnvironment('OAUTH_BASE_URL');
   static const String oauthClientId = String.fromEnvironment('OAUTH_CLIENT_ID');
   static const String oauthRedirectUri = String.fromEnvironment(
@@ -43,9 +43,6 @@ class AppConfig {
   /// RuStore Push project id (per client); empty → push disabled.
   static const String rustoreProjectId =
       String.fromEnvironment('RUSTORE_PROJECT_ID');
-
-  static bool get oauthEnabled =>
-      oauthBaseUrl.isNotEmpty && oauthClientId.isNotEmpty;
 }
 
 /// Brand palette injected per client. Defaults mirror the web design tokens
@@ -69,9 +66,7 @@ class BrandConfig {
   );
 }
 
-/// Feature flags gate the 9 tenant user-journey blocks. Blocks whose backend
-/// is not ready ship disabled by default and render a stub screen when
-/// force-enabled from a profile.
+/// Feature flags let a build profile hide the optional tabs.
 class AppFeatures {
   const AppFeatures._();
 
@@ -79,12 +74,5 @@ class AppFeatures {
       bool.fromEnvironment('FEATURE_PAYMENTS', defaultValue: true);
   static const bool documents =
       bool.fromEnvironment('FEATURE_DOCUMENTS', defaultValue: true);
-  static const bool tickets = bool.fromEnvironment('FEATURE_TICKETS');
-  static const bool chat = bool.fromEnvironment('FEATURE_CHAT');
-  static const bool negotiation = bool.fromEnvironment('FEATURE_NEGOTIATION');
-  static const bool termination = bool.fromEnvironment('FEATURE_TERMINATION');
-  static const bool kyc = bool.fromEnvironment('FEATURE_KYC');
-  static const bool archive =
-      bool.fromEnvironment('FEATURE_ARCHIVE', defaultValue: true);
   static const bool push = bool.fromEnvironment('FEATURE_PUSH');
 }

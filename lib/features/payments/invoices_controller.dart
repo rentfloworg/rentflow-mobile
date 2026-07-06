@@ -1,50 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentflow_api/rentflow_api.dart';
 
-import '../../core/api/errors.dart';
 import '../../core/api/providers.dart';
-import '../rentals/rentals_controller.dart';
 
 final invoicesProvider =
-    AsyncNotifierProvider<InvoicesController, List<InvoiceResponse>>(
+    AsyncNotifierProvider<InvoicesController, List<TenantInvoiceResponse>>(
   InvoicesController.new,
 );
 
-/// Aggregates invoices across all of the tenant's rentals
-/// (the gateway only exposes invoices per rental: GET /rent/{id}/invoices).
-class InvoicesController extends AsyncNotifier<List<InvoiceResponse>> {
+/// Invoices across all of the tenant's rentals (`GET /tenant/invoices`),
+/// ordered by due date desc on the backend. An account without tenant scope
+/// gets an empty list.
+class InvoicesController extends AsyncNotifier<List<TenantInvoiceResponse>> {
   @override
-  Future<List<InvoiceResponse>> build() async {
-    final rentals = await ref.watch(rentalsProvider.future);
-    final api = ref.read(rentalInvoicesApiProvider);
+  Future<List<TenantInvoiceResponse>> build() => _fetch();
 
-    final invoices = <InvoiceResponse>[];
-    for (final rental in rentals) {
-      try {
-        final response = await api.rentInvoicesControllerListRentalInvoices(
-          rentalId: rental.id,
-        );
-        invoices.addAll(response.data?.invoices ?? const []);
-      } catch (error) {
-        // Rental-scoped tenant access is not finished on the backend
-        // (Track B1) — skip rentals we cannot read instead of failing.
-        if (!isDegradableAccessError(error)) rethrow;
-      }
-    }
-
-    invoices.sort((a, b) => _sortKey(b).compareTo(_sortKey(a)));
-    return invoices;
+  Future<List<TenantInvoiceResponse>> _fetch() async {
+    final response =
+        await ref.read(tenantApiProvider).tenantControllerListInvoices();
+    return response.data?.items.toList() ?? const [];
   }
 
   Future<void> refresh() async {
-    ref.invalidate(rentalsProvider);
-    ref.invalidateSelf();
-    await future;
-  }
-
-  static DateTime _sortKey(InvoiceResponse invoice) {
-    return DateTime.tryParse(invoice.dueDate ?? '') ??
-        DateTime.tryParse(invoice.createdAt) ??
-        DateTime.fromMillisecondsSinceEpoch(0);
+    state = await AsyncValue.guard(_fetch);
   }
 }

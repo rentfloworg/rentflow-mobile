@@ -7,11 +7,10 @@ import 'core/config/app_config.dart';
 import 'features/auth/login_screen.dart';
 import 'features/auth/otp_screen.dart';
 import 'features/documents/documents_screen.dart';
+import 'features/home/home_screen.dart';
 import 'features/payments/payments_screen.dart';
 import 'features/profile/profile_screen.dart';
-import 'features/rentals/rentals_screen.dart';
 import 'features/shell/shell_screen.dart';
-import 'features/stubs/stub_screen.dart';
 
 /// Pure auth-redirect rule (extracted so it is unit-testable):
 /// unknown → splash, unauthenticated → login, authenticated → out of
@@ -73,7 +72,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/home',
-                builder: (context, state) => const RentalsScreen(),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),
@@ -92,25 +91,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: '/documents',
                   builder: (context, state) => const DocumentsScreen(),
-                ),
-              ],
-            ),
-          if (AppFeatures.tickets)
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: '/tickets',
-                  builder: (context, state) =>
-                      const StubScreen(title: 'Заявки'),
-                ),
-              ],
-            ),
-          if (AppFeatures.chat)
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: '/chat',
-                  builder: (context, state) => const StubScreen(title: 'Чат'),
                 ),
               ],
             ),

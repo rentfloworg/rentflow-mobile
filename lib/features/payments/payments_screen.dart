@@ -25,8 +25,7 @@ class PaymentsScreen extends ConsumerWidget {
           if (items.isEmpty) {
             return EmptyStateView(
               icon: Icons.receipt_long_outlined,
-              message: 'Счетов пока нет — они появятся, '
-                  'когда арендодатель выставит первый платёж',
+              message: 'Счетов пока нет',
               onRefresh: refresh,
             );
           }
@@ -50,13 +49,18 @@ class PaymentsScreen extends ConsumerWidget {
 class _InvoiceCard extends StatelessWidget {
   const _InvoiceCard({required this.invoice});
 
-  final InvoiceResponse invoice;
+  final TenantInvoiceResponse invoice;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dueDate = formatDate(invoice.dueDate);
     final paidAt = formatDate(invoice.paidAt);
+    final periodStart = formatDate(invoice.periodStart);
+    final periodEnd = formatDate(invoice.periodEnd);
+    final period = (periodStart != null && periodEnd != null)
+        ? 'Период: $periodStart — $periodEnd'
+        : null;
 
     return Card(
       child: Padding(
@@ -101,11 +105,10 @@ class _InvoiceCard extends StatelessWidget {
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
-            if (invoice.propertyAddress != null &&
-                invoice.propertyAddress!.isNotEmpty) ...[
+            if (period != null) ...[
               const SizedBox(height: 4),
               Text(
-                invoice.propertyAddress!,
+                period,
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
@@ -116,59 +119,53 @@ class _InvoiceCard extends StatelessWidget {
     );
   }
 
-  /// Labels for the backend `InvoiceStatus` enum.
-  static String _statusLabel(String status) {
-    switch (status.toUpperCase()) {
-      case 'PENDING':
-        return 'Ожидает оплаты';
-      case 'PAID':
-        return 'Оплачен';
-      case 'OVERDUE':
-        return 'Просрочен';
-      case 'CANCELLED':
-        return 'Отменён';
-      case 'ADJUSTED':
-        return 'Скорректирован';
-      case 'PARTIAL':
-        return 'Частично оплачен';
-      default:
-        return status;
+  static String _statusLabel(TenantInvoiceResponseStatusEnum status) {
+    if (status == TenantInvoiceResponseStatusEnum.PENDING) {
+      return 'Ожидает оплаты';
     }
+    if (status == TenantInvoiceResponseStatusEnum.PAID) return 'Оплачен';
+    if (status == TenantInvoiceResponseStatusEnum.OVERDUE) return 'Просрочен';
+    if (status == TenantInvoiceResponseStatusEnum.CANCELLED) return 'Отменён';
+    if (status == TenantInvoiceResponseStatusEnum.ADJUSTED) {
+      return 'Скорректирован';
+    }
+    if (status == TenantInvoiceResponseStatusEnum.PARTIAL) {
+      return 'Частично оплачен';
+    }
+    return 'Счёт';
   }
 
-  static Color _statusColor(String status, ColorScheme scheme) {
-    switch (status.toUpperCase()) {
-      case 'PAID':
-        return Colors.green.shade700;
-      case 'OVERDUE':
-        return scheme.error;
-      case 'PENDING':
-        return Colors.orange.shade800;
-      case 'PARTIAL':
-        return Colors.orange.shade800;
-      case 'CANCELLED':
-        return scheme.outline;
-      default:
-        return scheme.primary;
+  static Color _statusColor(
+    TenantInvoiceResponseStatusEnum status,
+    ColorScheme scheme,
+  ) {
+    if (status == TenantInvoiceResponseStatusEnum.PAID) {
+      return Colors.green.shade700;
     }
+    if (status == TenantInvoiceResponseStatusEnum.OVERDUE) return scheme.error;
+    if (status == TenantInvoiceResponseStatusEnum.PENDING ||
+        status == TenantInvoiceResponseStatusEnum.PARTIAL) {
+      return Colors.orange.shade800;
+    }
+    if (status == TenantInvoiceResponseStatusEnum.CANCELLED) {
+      return scheme.outline;
+    }
+    return scheme.primary;
   }
 
-  static String _typeLabel(String type) {
-    switch (type.toUpperCase()) {
-      case 'RENT':
-        return 'Арендная плата';
-      case 'DEPOSIT':
-        return 'Депозит';
-      case 'UTILITIES':
-        return 'Коммунальные услуги';
-      case 'PENALTY':
-        return 'Пени';
-      case 'ADDITIONAL':
-        return 'Дополнительные услуги';
-      case 'ONE_TIME':
-        return 'Разовый платёж';
-      default:
-        return 'Счёт';
+  static String _typeLabel(TenantInvoiceResponseTypeEnum type) {
+    if (type == TenantInvoiceResponseTypeEnum.RENT) return 'Арендная плата';
+    if (type == TenantInvoiceResponseTypeEnum.DEPOSIT) return 'Депозит';
+    if (type == TenantInvoiceResponseTypeEnum.UTILITIES) {
+      return 'Коммунальные услуги';
     }
+    if (type == TenantInvoiceResponseTypeEnum.PENALTY) return 'Пени';
+    if (type == TenantInvoiceResponseTypeEnum.ADDITIONAL) {
+      return 'Дополнительные услуги';
+    }
+    if (type == TenantInvoiceResponseTypeEnum.ONE_TIME) {
+      return 'Разовый платёж';
+    }
+    return 'Счёт';
   }
 }

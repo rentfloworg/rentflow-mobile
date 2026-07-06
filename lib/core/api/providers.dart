@@ -31,30 +31,11 @@ final rentflowApiProvider = Provider<RentflowApi>((ref) {
   return RentflowApi(dio: ref.watch(dioProvider), interceptors: const []);
 });
 
-final rentalsApiProvider = Provider<RentalsApi>(
-  (ref) => ref.watch(rentflowApiProvider).getRentalsApi(),
-);
-
-final rentalInvoicesApiProvider = Provider<RentalInvoicesApi>(
-  (ref) => ref.watch(rentflowApiProvider).getRentalInvoicesApi(),
-);
-
-final invoicesApiProvider = Provider<InvoicesApi>(
-  (ref) => ref.watch(rentflowApiProvider).getInvoicesApi(),
-);
-
-final documentsApiProvider = Provider<DocumentsApi>(
-  (ref) => ref.watch(rentflowApiProvider).getDocumentsApi(),
-);
-
-final rentalDocumentsApiProvider = Provider<DocumentsRentalScopeApi>(
-  (ref) => ref.watch(rentflowApiProvider).getDocumentsRentalScopeApi(),
+/// Tenant-scoped endpoints: overview, invoices, documents and signing.
+final tenantApiProvider = Provider<TenantApi>(
+  (ref) => ref.watch(rentflowApiProvider).getTenantApi(),
 );
 
 final usersApiProvider = Provider<UsersApi>(
   (ref) => ref.watch(rentflowApiProvider).getUsersApi(),
-);
-
-final notificationsApiProvider = Provider<NotificationsApi>(
-  (ref) => ref.watch(rentflowApiProvider).getNotificationsApi(),
 );

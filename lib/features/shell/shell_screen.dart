@@ -23,7 +23,7 @@ class ShellTab {
 List<ShellTab> buildShellTabs() => [
       const ShellTab(
         path: '/home',
-        label: 'Аренда',
+        label: 'Главная',
         icon: Icons.home_outlined,
         selectedIcon: Icons.home,
       ),
@@ -40,20 +40,6 @@ List<ShellTab> buildShellTabs() => [
           label: 'Документы',
           icon: Icons.description_outlined,
           selectedIcon: Icons.description,
-        ),
-      if (AppFeatures.tickets)
-        const ShellTab(
-          path: '/tickets',
-          label: 'Заявки',
-          icon: Icons.build_outlined,
-          selectedIcon: Icons.build,
-        ),
-      if (AppFeatures.chat)
-        const ShellTab(
-          path: '/chat',
-          label: 'Чат',
-          icon: Icons.chat_bubble_outline,
-          selectedIcon: Icons.chat_bubble,
         ),
       const ShellTab(
         path: '/profile',

@@ -17,15 +17,6 @@ String ruErrorMessage(Object error) {
   return 'Что-то пошло не так. Попробуйте ещё раз.';
 }
 
-/// True when the error is an access/not-found response that should degrade
-/// to an empty state instead of an error banner (tenant-scoped access
-/// control on the backend is not finished yet — Track B1).
-bool isDegradableAccessError(Object error) {
-  if (error is! DioException) return false;
-  final status = error.response?.statusCode;
-  return status == 403 || status == 404;
-}
-
 String _dioMessage(DioException error) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:

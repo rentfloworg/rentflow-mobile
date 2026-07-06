@@ -3,34 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentflow_api/rentflow_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/api/providers.dart';
 import '../../core/auth/auth_controller.dart';
 import '../../core/config/app_config.dart';
 import '../../core/widgets/error_view.dart';
+import 'profile_controller.dart';
 
 /// Build/version footer values. The build number is injected by the conveyor
 /// via --dart-define; the default mirrors pubspec.yaml.
 const String _appVersion =
     String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
-
-final profileProvider =
-    AsyncNotifierProvider<ProfileController, GetMeResponse?>(
-  ProfileController.new,
-);
-
-class ProfileController extends AsyncNotifier<GetMeResponse?> {
-  @override
-  Future<GetMeResponse?> build() async {
-    final response =
-        await ref.read(usersApiProvider).usersControllerGetMe();
-    return response.data;
-  }
-
-  Future<void> refresh() async {
-    ref.invalidateSelf();
-    await future;
-  }
-}
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -115,6 +96,13 @@ class _ProfileBody extends ConsumerWidget {
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Вход по почте — доступ управляет владелец недвижимости.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 16),
           if (AppConfig.termsUrl.isNotEmpty)
