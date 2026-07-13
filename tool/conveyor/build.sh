@@ -230,6 +230,30 @@ log "artifact: $ARTIFACT"
 # downloadable); locally it is composed from ARTIFACT_URL_BASE if set.
 ARTIFACT_URL="${ARTIFACT_URL:-${ARTIFACT_URL_BASE:-}${ARTIFACT_URL_BASE:+/}$ARTIFACT}"
 
+# ── Publish the installable APK to a GitHub Release ───────────────────────
+# Actions artifacts need a logged-in GitHub session and expire after 30 days;
+# a release asset on this public repo is a stable, direct download. Report that
+# URL as the job's artifactUrl so the admin UI "download" link fetches the APK
+# directly instead of opening the Actions run page. Best-effort: on failure we
+# keep the run-page URL.
+if [ "$BUILD_APK" = 0 ] && [ -n "${GH_TOKEN:-}" ] && [ -n "${GITHUB_REPOSITORY:-}" ]; then
+  RELEASE_TAG="app-$CLIENT"
+  RELEASE_APK="dist/$CLIENT-latest.apk"
+  cp "dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.apk" "$RELEASE_APK"
+  if gh release view "$RELEASE_TAG" >/dev/null 2>&1 \
+    || gh release create "$RELEASE_TAG" --title "$APP_NAME (latest build)" \
+         --notes "Latest conveyor build of $APP_NAME ($CLIENT)."; then
+    if gh release upload "$RELEASE_TAG" "$RELEASE_APK" --clobber; then
+      ARTIFACT_URL="${GITHUB_SERVER_URL:-https://github.com}/$GITHUB_REPOSITORY/releases/download/$RELEASE_TAG/$CLIENT-latest.apk"
+      log "release asset: $ARTIFACT_URL"
+    else
+      log "WARN: release upload failed; keeping run-page artifact URL"
+    fi
+  else
+    log "WARN: release create/view failed; keeping run-page artifact URL"
+  fi
+fi
+
 # ── Publish ────────────────────────────────────────────────────────────────
 if [ "$PUBLISH" = 1 ] && [ "$BUILD_APK" = 0 ]; then
   if [ -n "${RUSTORE_KEY_ID:-}" ] && [ -n "${RUSTORE_PRIVATE_KEY:-}" ]; then

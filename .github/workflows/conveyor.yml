@@ -29,6 +29,10 @@ jobs:
     # Switch to [self-hosted, linux] once a runner is registered.
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # Needed to publish the installable APK as a GitHub Release asset, so the
+    # admin UI download link points straight at the file.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -48,8 +52,11 @@ jobs:
           CLIENT_SLUG: ${{ inputs.client_slug }}
           JOB_ID: ${{ inputs.job_id }}
           PUBLISH: ${{ inputs.publish }}
-          # Job artifact link shown in the admin UI — points at this run's
-          # artifacts (signed AAB + installable test APK).
+          # Token for `gh release` — lets the conveyor publish the installable
+          # APK as a release asset and report its direct download URL.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Fallback artifact link (the Actions run page) if the release upload
+          # is unavailable; a release build overrides this with the APK asset URL.
           ARTIFACT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           BUILDER_API_URL: ${{ secrets.BUILDER_API_URL }}
           BUILDER_CI_TOKEN: ${{ secrets.BUILDER_CI_TOKEN }}
