@@ -230,27 +230,29 @@ log "artifact: $ARTIFACT"
 # downloadable); locally it is composed from ARTIFACT_URL_BASE if set.
 ARTIFACT_URL="${ARTIFACT_URL:-${ARTIFACT_URL_BASE:-}${ARTIFACT_URL_BASE:+/}$ARTIFACT}"
 
-# ── Publish the installable APK to a GitHub Release ───────────────────────
-# Actions artifacts need a logged-in GitHub session and expire after 30 days;
-# a release asset on this public repo is a stable, direct download. Report that
-# URL as the job's artifactUrl so the admin UI "download" link fetches the APK
-# directly instead of opening the Actions run page. Best-effort: on failure we
-# keep the run-page URL.
-if [ "$BUILD_APK" = 0 ] && [ -n "${GH_TOKEN:-}" ] && [ -n "${GITHUB_REPOSITORY:-}" ]; then
-  RELEASE_TAG="app-$CLIENT"
-  RELEASE_APK="dist/$CLIENT-latest.apk"
-  cp "dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.apk" "$RELEASE_APK"
-  if gh release view "$RELEASE_TAG" >/dev/null 2>&1 \
-    || gh release create "$RELEASE_TAG" --title "$APP_NAME (latest build)" \
-         --notes "Latest conveyor build of $APP_NAME ($CLIENT)."; then
-    if gh release upload "$RELEASE_TAG" "$RELEASE_APK" --clobber; then
-      ARTIFACT_URL="${GITHUB_SERVER_URL:-https://github.com}/$GITHUB_REPOSITORY/releases/download/$RELEASE_TAG/$CLIENT-latest.apk"
-      log "release asset: $ARTIFACT_URL"
-    else
-      log "WARN: release upload failed; keeping run-page artifact URL"
-    fi
+# ── Publish the installable APK to object storage ─────────────────────────
+# Upload the signed APK to our S3-compatible object storage (Timeweb) and
+# report its public URL as the job's artifactUrl, so the admin UI download
+# button serves the .apk itself from our own storage — not GitHub. The bucket
+# is expected to be public-read (same as property images). Stable key per
+# client → stable URL. Best-effort: on failure we keep the fallback URL.
+if [ "$BUILD_APK" = 0 ] \
+  && [ -n "${S3_ENDPOINT:-}" ] && [ -n "${S3_BUCKET:-}" ] \
+  && [ -n "${S3_ACCESS_KEY_ID:-}" ] && [ -n "${S3_SECRET_ACCESS_KEY:-}" ]; then
+  S3_KEY="app-builds/$CLIENT/$CLIENT-latest.apk"
+  log "uploading APK to s3://$S3_BUCKET/$S3_KEY"
+  if AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY_ID" \
+     AWS_SECRET_ACCESS_KEY="$S3_SECRET_ACCESS_KEY" \
+     AWS_DEFAULT_REGION="${S3_REGION:-ru-1}" \
+     aws s3 cp "dist/$CLIENT-v$VERSION_NAME+$VERSION_CODE.apk" \
+       "s3://$S3_BUCKET/$S3_KEY" \
+       --endpoint-url "$S3_ENDPOINT" \
+       --content-type application/vnd.android.package-archive; then
+    S3_PUBLIC_BASE="${S3_PUBLIC_URL_BASE:-${S3_ENDPOINT%/}/$S3_BUCKET}"
+    ARTIFACT_URL="${S3_PUBLIC_BASE%/}/$S3_KEY"
+    log "artifact stored at: $ARTIFACT_URL"
   else
-    log "WARN: release create/view failed; keeping run-page artifact URL"
+    log "WARN: S3 upload failed; keeping fallback artifact URL"
   fi
 fi
 

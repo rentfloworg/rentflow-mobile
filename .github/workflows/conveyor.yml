@@ -29,10 +29,6 @@ jobs:
     # Switch to [self-hosted, linux] once a runner is registered.
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    # Needed to publish the installable APK as a GitHub Release asset, so the
-    # admin UI download link points straight at the file.
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -52,11 +48,17 @@ jobs:
           CLIENT_SLUG: ${{ inputs.client_slug }}
           JOB_ID: ${{ inputs.job_id }}
           PUBLISH: ${{ inputs.publish }}
-          # Token for `gh release` — lets the conveyor publish the installable
-          # APK as a release asset and report its direct download URL.
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Fallback artifact link (the Actions run page) if the release upload
-          # is unavailable; a release build overrides this with the APK asset URL.
+          # Object storage for the installable APK — the conveyor uploads the
+          # build here and reports its public URL as the job artifactUrl, so the
+          # download button serves the .apk from our storage instead of GitHub.
+          S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+          S3_REGION: ${{ secrets.S3_REGION }}
+          S3_BUCKET: ${{ secrets.S3_APP_BUCKET }}
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          S3_PUBLIC_URL_BASE: ${{ secrets.S3_PUBLIC_URL_BASE }}
+          # Fallback artifact link (the Actions run page) used only if S3 is not
+          # configured; a successful upload overrides it with the storage URL.
           ARTIFACT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           BUILDER_API_URL: ${{ secrets.BUILDER_API_URL }}
           BUILDER_CI_TOKEN: ${{ secrets.BUILDER_CI_TOKEN }}
